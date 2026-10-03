@@ -9,7 +9,7 @@ function contact(service: Service, purpose: string) {
   return `mailto:hello@starrtree.org?subject=${encodeURIComponent(`${purpose}: ${service.name}`)}&body=${encodeURIComponent(`Service: ${service.name}\n${service.price}\n\nMy name:\nPreferred timing:\nProject scope / booking details:\n\nPlease confirm capacity and, where applicable, Google Calendar availability before payment. I understand test payments do not purchase a real service.`)}`;
 }
 
-function ServiceCard({ service }: { service: Service }) {
+export function ServiceCard({ service }: { service: Service }) {
   const [approved, setApproved] = useState(false);
   const [checkoutOpened, setCheckoutOpened] = useState(false);
   const booking = service.model.includes("manual booking");
