@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.vercel/
+.env*
+*.tsbuildinfo
+*.blend1
+work/
+outputs/

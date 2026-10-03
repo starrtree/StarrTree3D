@@ -1,0 +1,5 @@
+import {useState} from 'react';
+import CommerceCatalog from '../app/CommerceCatalog';
+import MusicCatalog from '../app/MusicCatalog';
+import {EPFeature} from '../app/ReleasePromotion';
+export default function App(){const [view,setView]=useState('home');return <><header><img src="/images/starrtree-gold-logo.png" width="52" alt="StarrTree"/><nav><button onClick={()=>setView('home')}>Explore</button><button onClick={()=>setView('services')}>Services</button><button onClick={()=>setView('music')}>Music & Sound</button></nav></header><main><p className="eyebrow">WELCOME TO STARRTREE</p><h1>A Light that Grows<br/>through its Darkness...</h1><p>A Life that Shines through its Branches...</p>{view==='services'?<CommerceCatalog/>:view==='music'?<><EPFeature/><MusicCatalog/></>:<><img className="baseline-art" src="/images/cosmic-tree.webp" alt="StarrTree cosmic tree"/><h2>Seven worlds. One root.</h2><p>Music shapes the storytelling. Engineering makes it real. Education makes it useful. AI helps it scale.</p><button onClick={()=>setView('services')}>Find a service ↗</button><button onClick={()=>setView('music')}>Enter Music & Sound →</button></>}</main></>}
