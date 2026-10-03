@@ -1,0 +1,44 @@
+[
+  {
+    "id": "web",
+    "modelBytes": 169772,
+    "posterBytes": 298472,
+    "source": "new Blender membrane geometry"
+  },
+  {
+    "id": "art",
+    "modelBytes": 248156,
+    "posterBytes": 268492,
+    "source": "Meshy_AI_Liquid_Diamond_0804231912_texture-optimized_qeygwd.glb"
+  },
+  {
+    "id": "ai",
+    "modelBytes": 169748,
+    "posterBytes": 275723,
+    "source": "new Blender membrane geometry"
+  },
+  {
+    "id": "education",
+    "modelBytes": 132372,
+    "posterBytes": 241863,
+    "source": "new Blender membrane geometry"
+  },
+  {
+    "id": "music",
+    "modelBytes": 132368,
+    "posterBytes": 331551,
+    "source": "new Blender membrane geometry"
+  },
+  {
+    "id": "ventures",
+    "modelBytes": 241588,
+    "posterBytes": 266344,
+    "source": "Meshy_AI_Prismatic_Diamond_0804231813_texture-optimized_rem9i7.glb"
+  },
+  {
+    "id": "wisdom",
+    "modelBytes": 244744,
+    "posterBytes": 249692,
+    "source": "new Blender membrane geometry"
+  }
+]
