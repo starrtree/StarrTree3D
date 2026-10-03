@@ -7,7 +7,7 @@ import StarrFruit from './components/StarrFruit';
 const MusicCatalog=lazy(()=>import('../app/MusicCatalog'));
 const UnreleasedVault=lazy(()=>import('../app/UnreleasedVault'));
 const tone=(color:string)=>({'--tone':color} as CSSProperties);
-function Poster({world,large=false}:{world:World;large?:boolean}){return world.id==='music'?<div className={`st-sculpture ${large?'is-large':''}`}><StarrFruit worldId={world.id} color={world.color} large={large}/></div>:<div className={`st-poster ${large?'is-large':''}`} style={tone(world.color)}><img src={world.image} alt=""/><span/></div>}
+function Poster({world,large=false}:{world:World;large?:boolean}){return <div className={`st-sculpture ${large?'is-large':''}`}><StarrFruit worldId={world.id} color={world.color} large={large}/></div>}
 function Dialog({title,children,onClose}:{title:string;children:ReactNode;onClose:()=>void}){
  const ref=useRef<HTMLDialogElement>(null);
  useEffect(()=>{const previous=document.activeElement as HTMLElement;ref.current?.showModal();return()=>{if(previous?.isConnected)previous.focus()}},[]);
@@ -39,4 +39,5 @@ export default function App(){
  {intro&&<Dialog title="Welcome to StarrTree" onClose={leaveIntro}><div className="st-welcome"><p className="st-kicker">WELCOME TO THE</p><img src="/images/starrtree-gold-logo.png" alt="The original StarrTree logo"/><h2>STARRTREE</h2><p>The Light that Grows through Darkness</p><button className="st-primary" onClick={leaveIntro}>✦ Spark the Seed</button><button className="st-welcome-skip" onClick={leaveIntro}>Explore the seven worlds →</button></div></Dialog>}
  </div>
 }
+
 
