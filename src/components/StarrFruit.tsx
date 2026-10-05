@@ -10,6 +10,7 @@ import {
 const OpticalScene = lazy(() => import("./OpticalScene"));
 
 import { fruitAssets, type FruitWorldId } from "../data/assets";
+import { useExperience } from "./Experience";
 
 type Props = {
   worldId: string;
@@ -41,7 +42,8 @@ export default function StarrFruit({
 }: Props) {
   const id = (worldId in fruitAssets ? worldId : "music") as FruitWorldId;
   const [reduced, setReduced] = useState(true);
-  const [enabled, setEnabled] = useState(false);
+  const [enabled, setEnabled] = useState(true);
+  const { motion } = useExperience();
   const [ready, setReady] = useState(false);
   const [failed, setFailed] = useState(false);
   const markReady = useCallback(() => setReady(true), []);
@@ -54,10 +56,10 @@ export default function StarrFruit({
   }, []);
   useEffect(() => {
     setReady(false);
-    setEnabled(false);
+    setEnabled(true);
     setFailed(false);
   }, [id]);
-  const show3D = large && enabled && !staticOnly && !reduced && !failed;
+  const show3D = large && enabled && motion && !staticOnly && !reduced && !failed;
   return (
     <div
       className={`starrfruit ${large ? "starrfruit-large" : ""}`}

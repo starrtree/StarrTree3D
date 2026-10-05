@@ -1,0 +1,1 @@
+User-supplied StarrTree media, October 5 2026. Derivatives prepared by scripts/prepare-cinematic-media.mjs. Original files remain in the user Downloads folder. All website video exports have their audio tracks removed. The song is unreleased user-provided material. Reference UI images are not used as interface screenshots.

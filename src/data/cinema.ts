@@ -1,0 +1,17 @@
+/** Public, user-supplied media. Swap paths here; never put credentials in this file. */
+export const cinema = {
+  seed: '/cinema/starrseed.jpg',
+  flights: ['/cinema/flight-away.mp4', '/cinema/flight-towards.mp4'],
+  flightPoster: '/cinema/flight-poster.webp',
+  homeVideo: '/cinema/home-hover.mp4',
+  homePoster: '/cinema/home-poster.webp',
+  mobilePoster: '/cinema/home-mobile.webp',
+  studioVideo: '/cinema/studio-rise.mp4',
+  studioPoster: '/cinema/studio-hero.webp',
+  studioEnd: '/cinema/studio-end.webp',
+  studioLogo: '/cinema/starrverse-logo.webp',
+  portrait: '/cinema/starrx-card.webp',
+  guide: '/cinema/starrvis.webp',
+  music: { src: '/cinema/only-1.m4a', title: '0nly_1', artist: 'MAX STARR', status: 'Unreleased' },
+  effects: { seed: '/cinema/seed-impact.mp3', arrival: '/cinema/arrival-impact.mp3' },
+} as const;

@@ -59,3 +59,17 @@ npx vercel deploy
 If `starrtree3d` does not exist, create that project during linking and connect it to `starrtree/StarrTree3D`, branch `redesign/seven-worlds`. Review the selected project before deploy. `vercel.json` uses Vite's `dist` output. Do not use `--prod`, attach starrtree.org, or alter StarrTreeGPT. Verify the returned preview URL loads on desktop and mobile before claiming deployment complete.
 
 Future hooks: original StarrX models and legacy intro implementation remain available. A full intro video, Spline integration and animated StarrVis head were deliberately deferred.
+# Cinematic media and motion (October 5, 2026)
+
+The new experience is normal React + CSS + GSAP. No external editor or account is needed to change it.
+
+- **Replace films, music, posters, or the studio logo:** edit `src/data/cinema.ts`. Files live in `public/cinema/`. Videos must have no source audio; the soundtrack and effects are separate, opt-in audio.
+- **Entrance:** `src/components/SeedEntrance.tsx` controls the original StarrSeed, its green/gold activation, two flight angles, and Skip film. Session key `starrtree:cinema:v3` prevents repeating the intro; Replay welcome reopens it.
+- **Home composition:** `src/components/CinematicHome.tsx` and `src/cinematic.css`. Desktop uses a muted film; mobile uses the portrait artwork with gentle motion to preserve all seven worlds. World labels never move.
+- **Studio scroll film:** `src/components/StudioArrival.tsx`. GSAP ScrollTrigger maps scroll to video time and fades to the supplied still at the end. Pause motion / reduced motion uses the still. Art and Music link to each other as StarrVerse Studios.
+- **Sound:** `src/components/Experience.tsx`. “Enter with sound” opts into the unreleased `0nly_1` soundtrack and impact effects. Silent entry remains silent. Opening an item pauses the soundtrack so release players can be used without overlap. The fixed player can resume it.
+- **3D:** existing exported models and posters remain in `src/data/assets.ts`. `OpticalScene.tsx` provides optical materials and gentle movement. World pages enable one model at a time; Pause motion, reduced motion and WebGL failure retain the poster.
+- **Regenerate optimized media:** `node scripts/prepare-cinematic-media.mjs "C:/path/to/originals"`. Requires FFmpeg (`FFMPEG_PATH` can override its location). This is optional preparation; serving and editing the finished site needs only Node. Original filenames are recorded in that script, and source originals are not modified.
+
+## Existing content and commerce editing guide
+

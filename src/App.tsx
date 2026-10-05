@@ -12,6 +12,11 @@ import catalog from "../app/commerce-catalog.json";
 import { ServiceCard } from "../app/CommerceCatalog";
 import { EPFeature, MyPOVFeature } from "../app/ReleasePromotion";
 import StarrFruit from "./components/StarrFruit";
+import CinematicHome from "./components/CinematicHome";
+import SeedEntrance from "./components/SeedEntrance";
+import StudioArrival from "./components/StudioArrival";
+import { ExperienceProvider, ExperienceControls, useExperience } from "./components/Experience";
+import { cinema } from "./data/cinema";
 const MusicCatalog = lazy(() => import("../app/MusicCatalog"));
 const UnreleasedVault = lazy(() => import("../app/UnreleasedVault"));
 const tone = (color: string) => ({ "--tone": color }) as CSSProperties;
@@ -178,7 +183,9 @@ function WorldPage({
   const own = items.filter((i) => i.worldId === world.id);
   const kinds = ["All", ...new Set(own.map((i) => i.kind))];
   return (
-    <section className="st-world" style={tone(world.color)}>
+    <>
+      {world.id === "art" && <StudioArrival />}
+    <section id="world-destinations" className="st-world" style={{ ...tone(world.color), "--scene-image": `url(${world.id === "art" || world.id === "music" ? cinema.studioPoster : world.image})` } as CSSProperties}>
       <a className="st-back" href="#/">
         ← All seven worlds
       </a>
@@ -190,6 +197,7 @@ function WorldPage({
           <h1>{world.title}</h1>
           <p className="st-world-lead">{world.short}</p>
           <p className="st-description">{world.description}</p>
+          {(world.id === "art" || world.id === "music") && <div className="studio-connection"><img src={cinema.studioLogo} alt="StarrVerse Studios" /><a href={world.id === "art" ? "#/world/music" : "#/world/art"}>{world.id === "art" ? "Explore Music & Sound" : "Explore Art & Media"} ↗</a></div>}
           <div className="st-world-meta">
             <span>{own.length} destinations</span>
             <span>{world.frequency} Hz · symbolic</span>
@@ -278,16 +286,17 @@ function WorldPage({
           ))}
       </nav>
     </section>
+    </>
   );
 }
-export default function App() {
+function AppContent() {
+  const { stopSound, motion } = useExperience();
   const [route, setRoute] = useState(() => location.hash.slice(1) || "/");
-  const [selected, setSelected] = useState<World | null>(null);
   const [item, setItem] = useState<Item | null>(null);
   const [about, setAbout] = useState(false);
   const [intro, setIntro] = useState(() => {
     try {
-      return !sessionStorage.getItem("starrtree:welcome:v2");
+      return !sessionStorage.getItem("starrtree:cinema:v3");
     } catch {
       return true;
     }
@@ -313,10 +322,12 @@ export default function App() {
   }, [route]);
   const leaveIntro = () => {
     setIntro(false);
+    requestAnimationFrame(() => main.current?.focus({ preventScroll: true }));
     try {
-      sessionStorage.setItem("starrtree:welcome:v2", "1");
+      sessionStorage.setItem("starrtree:cinema:v3", "1");
     } catch {}
   };
+  const openItem = (next: Item) => { stopSound(); setItem(next); };
   const found = items.filter(
     (i) =>
       (!services || i.kind === "Service" || i.kind === "Product") &&
@@ -327,7 +338,7 @@ export default function App() {
         .includes(query.toLowerCase().trim()),
   );
   return (
-    <div className="st-app">
+    <div className={`st-app ${motion ? "" : "motion-paused"}`} >
       <a
         href="#st-main"
         className="st-skip"
@@ -369,100 +380,9 @@ export default function App() {
       </header>
       <main id="st-main" ref={main} tabIndex={-1} className="st-main">
         {home ? (
-          <>
-            <div className="st-home-heading">
-              <div>
-                <p className="st-kicker">
-                  ROOTED ON EARTH. REACHING FOR THE STARS.
-                </p>
-                <h1>
-                  Seven worlds.
-                  <br />
-                  <em>One living root.</em>
-                </h1>
-                <p className="st-original">
-                  A Light that Grows through its Darkness...
-                  <br />A Life that Shines through its Branches...
-                </p>
-                <p className="st-home-description">
-                  Music shapes the storytelling. Engineering makes it real.
-                  Education makes it useful. AI helps it scale.
-                </p>
-                <a className="st-text-link" href="#/services">
-                  Have something in mind? Find a service ↗
-                </a>
-              </div>
-              <div
-                className="st-constellation"
-                aria-label="Explore seven StarrFruit worlds"
-              >
-                <div className="st-orbit st-orbit-one" />
-                <div className="st-orbit st-orbit-two" />
-                <button className="st-center" onClick={() => setAbout(true)}>
-                  <img
-                    src="/images/starrtree-gold-logo.png"
-                    alt="Original StarrTree symbol"
-                  />
-                  <strong>
-                    M<span>✦</span>X
-                  </strong>
-                  <small>STARRX / THE HUMAN AT THE CENTER</small>
-                </button>
-                {worlds.map((w, n) => (
-                  <button
-                    key={w.id}
-                    className={`st-fruit-node st-node-${n} ${selected?.id === w.id ? "is-selected" : ""}`}
-                    style={tone(w.color)}
-                    aria-pressed={selected?.id === w.id}
-                    onClick={() => setSelected(w)}
-                  >
-                    <Poster world={w} />
-                    <span className="st-node-number">{w.number}</span>
-                    <strong>{w.title}</strong>
-                    <small>
-                      {w.chakra} · {w.frequency} Hz
-                    </small>
-                  </button>
-                ))}
-              </div>
-            </div>
-            <div
-              className="st-selection"
-              aria-live="polite"
-              style={tone(selected?.color || "#dec598")}
-            >
-              <div>
-                <p className="st-kicker">
-                  {selected
-                    ? `SELECTED WORLD / ${selected.number}`
-                    : "EXPLORE THE STARR SYSTEM"}
-                </p>
-                <h2>
-                  {selected?.title || "Choose a StarrFruit. Follow the light."}
-                </h2>
-                <p>
-                  {selected?.short ||
-                    "Seven branches of one creative ecosystem. Select a world above, then step inside."}
-                </p>
-              </div>
-              {selected ? (
-                <a className="st-primary" href={`#/world/${selected.id}`}>
-                  Enter {selected.title} →
-                </a>
-              ) : (
-                <a className="st-primary" href="#/items">
-                  Find something directly ↗
-                </a>
-              )}
-            </div>
-            <div className="st-home-foot">
-              <span>IMAGINATION ↔ INVENTION</span>
-              <button onClick={() => setAbout(true)}>Meet Max Starr ↗</button>
-              <span>Sound off until you press play</span>
-            </div>
-          </>
+          <CinematicHome onAbout={() => setAbout(true)} active={!intro} />
         ) : world ? (
-          <WorldPage key={world.id} world={world} onOpen={setItem} />
+          <WorldPage key={world.id} world={world} onOpen={openItem} />
         ) : (
           <section className="st-directory">
             <a className="st-back" href="#/">
@@ -533,7 +453,7 @@ export default function App() {
             {found.length ? (
               <div className="st-items">
                 {found.map((i) => (
-                  <ItemCard key={i.id} item={i} onOpen={setItem} />
+                  <ItemCard key={i.id} item={i} onOpen={openItem} />
                 ))}
               </div>
             ) : (
@@ -565,7 +485,7 @@ export default function App() {
         <Dialog title="Max Starr / StarrX" onClose={() => setAbout(false)}>
           <div className="st-detail st-about">
             <img
-              src="/images/origin-portrait.webp"
+              src={cinema.portrait}
               alt="Max Starr beside a luminous cosmic node"
             />
             <p className="st-kicker">THE HUMAN AT THE CENTER</p>
@@ -595,25 +515,9 @@ export default function App() {
           </div>
         </Dialog>
       )}
-      {intro && (
-        <Dialog title="Welcome to StarrTree" onClose={leaveIntro}>
-          <div className="st-welcome">
-            <p className="st-kicker">WELCOME TO THE</p>
-            <img
-              src="/images/starrtree-gold-logo.png"
-              alt="The original StarrTree logo"
-            />
-            <h2>STARRTREE</h2>
-            <p>The Light that Grows through Darkness</p>
-            <button className="st-primary" onClick={leaveIntro}>
-              ✦ Spark the Seed
-            </button>
-            <button className="st-welcome-skip" onClick={leaveIntro}>
-              Explore the seven worlds →
-            </button>
-          </div>
-        </Dialog>
-      )}
+      <ExperienceControls />
+      {intro && <SeedEntrance onComplete={leaveIntro} />}
     </div>
   );
 }
+export default function App() { return <ExperienceProvider><AppContent /></ExperienceProvider>; }
