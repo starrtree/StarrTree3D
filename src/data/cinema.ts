@@ -8,6 +8,8 @@ export const cinema = {
   homePoster: '/cinema/home-poster.webp',
   mobilePoster: '/cinema/home-mobile.webp',
   studioVideo: '/cinema/studio-rise.mp4',
+  studioIdleVideo: '/cinema/studio-idle.mp4',
+  studioOpeningSeconds: 1.5,
   studioPoster: '/cinema/studio-hero.webp',
   studioEnd: '/cinema/studio-end.webp',
   studioLogo: '/cinema/starrverse-logo.webp',

@@ -7,6 +7,7 @@ gsap.registerPlugin(ScrollTrigger);
 export default function StudioArrival() {
   const root = useRef<HTMLElement>(null);
   const video = useRef<HTMLVideoElement>(null);
+  const idle = useRef<HTMLVideoElement>(null);
   const still = useRef<HTMLImageElement>(null);
   const bar = useRef<HTMLDivElement>(null);
   const [ready, setReady] = useState(false);
@@ -15,9 +16,11 @@ export default function StudioArrival() {
   useEffect(() => {
     if (!motion || !ready || !video.current) return;
     const film = video.current;
-    const halfway = film.duration / 2;
+    const halfway = Math.min(cinema.studioOpeningSeconds, film.duration / 2);
     const end = film.duration - 0.08;
     let takeover = false;
+    let idlePlaying = false;
+    let inView = true;
     let previousScroll = window.scrollY;
     let progress = 0;
     const physics = { time: halfway, velocity: 0, target: halfway };
@@ -33,8 +36,9 @@ export default function StudioArrival() {
     };
     const trigger = ScrollTrigger.create({
       trigger: root.current, start: 'top top', end: 'bottom bottom',
+      onToggle: self => { inView = self.isActive; },
       onUpdate: self => {
-        progress = self.progress;
+        progress = Math.min(1, self.progress / 0.62);
         physics.target = halfway + progress * (end - halfway);
         if (Math.abs(window.scrollY - previousScroll) > 4) enterScroll();
         previousScroll = window.scrollY;
@@ -53,26 +57,35 @@ export default function StudioArrival() {
       physics.time = Math.max(0, Math.min(end, physics.time + physics.velocity * dt));
       if (!film.seeking && Math.abs(film.currentTime - physics.time) > 0.025) film.currentTime = physics.time;
       setBar(physics.time / film.duration);
-      setStill(Math.max(0, (physics.time / end - 0.91) / 0.09));
+      const showIdle = progress >= 0.995 && Math.abs(physics.time - end) < 0.08;
+      const loop = idle.current;
+      if (loop) {
+        if (showIdle && inView && !idlePlaying) {
+          idlePlaying = true;
+          void loop.play().catch(() => { idlePlaying = false; });
+        } else if ((!showIdle || !inView) && idlePlaying) {
+          loop.pause(); idlePlaying = false;
+        }
+        loop.style.opacity = showIdle && loop.readyState >= 2 ? '1' : '0';
+      }
+      setStill(showIdle && (!loop || loop.readyState < 2) ? 1 : 0);
     };
     gsap.ticker.add(tick);
     const context = gsap.context(() => {
       const timeline = gsap.timeline({ scrollTrigger: { trigger: root.current, start: 'top top', end: 'bottom bottom', scrub: 0.65 } });
-      timeline.fromTo('.studio-arrival-title img', { y: 42, scale: 0.88, opacity: 0.35 }, { y: -28, scale: 1, opacity: 1, duration: 0.4 })
-        .fromTo('.studio-arrival-title .cinema-eyebrow', { y: 18, opacity: 0 }, { y: -12, opacity: 1, duration: 0.25 }, 0)
-        .fromTo('.studio-arrival-title > p:last-child', { y: 35, opacity: 0 }, { y: -18, opacity: 1, duration: 0.3 }, 0.12)
-        .to('.studio-arrival-title', { y: -100, opacity: 0, duration: 0.3 }, 0.7);
-      timeline.fromTo('.studio-chapter', { y: 120, opacity: 0 }, { y: 0, opacity: 1, duration: 0.22 }, 0.45)
+      timeline.fromTo('.studio-arrival-title', { y: 0, scale: 1, opacity: 1 }, { y: -120, scale: 0.8, opacity: 0, duration: 0.35 }, 0);
+      timeline.fromTo('.studio-chapter', { y: 120, opacity: 0 }, { y: 0, opacity: 1, duration: 0.22 }, 0.3)
         .to('.studio-chapter', { y: -70, opacity: 0, duration: 0.2 }, 0.8);
     }, root);
     void film.play().catch(enterScroll);
-    return () => { film.pause(); gsap.ticker.remove(tick); trigger.kill(); context.revert(); };
+    return () => { film.pause(); idle.current?.pause(); gsap.ticker.remove(tick); trigger.kill(); context.revert(); };
   }, [motion, ready]);
   return <section ref={root} className={`studio-arrival studio-flow ${motion ? 'is-scrubbed' : ''}`} aria-label="StarrVerse Studios cinematic entrance" data-phase={motion ? phase : 'still'}>
     <div className="studio-sticky">
       <div className="studio-media">
         <img className="studio-base" src={cinema.studioPoster} alt="StarrX rises in front of the cosmic world tree" />
         {motion && <video ref={video} src={cinema.studioVideo} className="studio-film" muted playsInline preload="auto" poster={cinema.studioPoster} onLoadedMetadata={() => setReady(true)} onError={() => setReady(false)} aria-hidden="true" />}
+        {motion && <video ref={idle} src={cinema.studioIdleVideo} className="studio-film studio-idle" muted playsInline loop preload="auto" aria-hidden="true" style={{ opacity: 0, zIndex: 2, transition: 'opacity 250ms linear' }} />}
         <img ref={still} className="studio-end" src={cinema.studioPoster} alt="" style={{ opacity: motion ? 0 : 1 }} />
       </div>
       <div className="studio-arrival-shade" />

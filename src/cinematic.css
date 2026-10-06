@@ -147,7 +147,7 @@ body { background:#060609; }
   .studio-flow .studio-arrival-title { bottom:28%; }
 }
 /* Pinned film chapter: only overlays travel until this scene is complete. */
-.studio-flow.studio-arrival.is-scrubbed{height:260svh}
+.studio-flow.studio-arrival.is-scrubbed{height:320svh}
 .studio-flow .studio-sticky{position:sticky;top:0;height:100svh;min-height:550px}
 .studio-flow .studio-media{inset:0}
 .studio-flow .studio-arrival-title{bottom:23%}
