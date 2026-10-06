@@ -6,6 +6,7 @@ export type FruitAsset = {
   poster: string;
   name: string;
   source: "Blender" | "adapted inherited GLB";
+  preserveMaterials?: boolean;
   format: "glb";
   bytes: number;
 };
@@ -19,12 +20,13 @@ export const fruitAssets: Record<FruitWorldId, FruitAsset> = {
     bytes: 169772,
   },
   art: {
-    model: "/fruit/art.glb",
-    poster: "/fruit/art.png",
-    name: "Liquid prism",
+    model: "/models/Meshy_AI_Cronuts_A_New_Dream_0717200127_texture-optimized_rjpxfn.glb",
+    poster: "/fruit/art-original.png",
+    name: "CRONUTS television",
     source: "adapted inherited GLB",
+    preserveMaterials: true,
     format: "glb",
-    bytes: 248156,
+    bytes: 1306552,
   },
   ai: {
     model: "/fruit/ai.glb",
@@ -35,28 +37,31 @@ export const fruitAssets: Record<FruitWorldId, FruitAsset> = {
     bytes: 169748,
   },
   education: {
-    model: "/fruit/education.glb",
-    poster: "/fruit/education.png",
-    name: "Shared orbit",
-    source: "Blender",
+    model: "/models/orb-plant-bio-mv_fvbz1y.glb",
+    poster: "/fruit/education-original.png",
+    name: "Living bio-orb",
+    source: "adapted inherited GLB",
+    preserveMaterials: true,
     format: "glb",
-    bytes: 132372,
+    bytes: 2745956,
   },
   music: {
-    model: "/fruit/music.glb",
-    poster: "/fruit/music.png",
-    name: "Resonance membrane",
-    source: "Blender",
+    model: "/models/Meshy_AI_Cosmic_Arcade_Console_0717200039_texture-optimized_aexkjw.glb",
+    poster: "/fruit/music-original.png",
+    name: "Cosmic music console",
+    source: "adapted inherited GLB",
+    preserveMaterials: true,
     format: "glb",
-    bytes: 132368,
+    bytes: 810796,
   },
   ventures: {
-    model: "/fruit/ventures.glb",
-    poster: "/fruit/ventures.png",
-    name: "Prismatic seed",
+    model: "/models/TechRaEye_orb-optimized_navvdf.glb",
+    poster: "/fruit/ventures-original.png",
+    name: "Mechanical Eye of Ra",
     source: "adapted inherited GLB",
+    preserveMaterials: true,
     format: "glb",
-    bytes: 241588,
+    bytes: 2728416,
   },
   wisdom: {
     model: "/fruit/wisdom.glb",
@@ -86,7 +91,7 @@ export const inheritedAssets = [
   {
     url: "/models/Meshy_AI_Cosmic_Arcade_Console_0717200039_texture-optimized_aexkjw.glb",
     bytes: 810796,
-    use: "Retained; literal arcade does not fit membrane family",
+    use: "Restored for Music & Sound with original keyboard textures",
   },
   {
     url: "/models/Meshy_AI_Cosmic_Ascendant_0812022756_texture-optimized_ppeonk.glb",
@@ -96,7 +101,7 @@ export const inheritedAssets = [
   {
     url: "/models/Meshy_AI_Cronuts_A_New_Dream_0717200127_texture-optimized_rjpxfn.glb",
     bytes: 1306552,
-    use: "Retained; literal television does not fit membrane family",
+    use: "Restored for Art & Media with original screen artwork",
   },
   {
     url: "/models/Meshy_AI_Liquid_Diamond_0804231912_texture-optimized_qeygwd.glb",
@@ -111,7 +116,7 @@ export const inheritedAssets = [
   {
     url: "/models/orb-plant-bio-mv_fvbz1y.glb",
     bytes: 2745956,
-    use: "Retained; literal foliage does not fit brief",
+    use: "Restored for Education & Community",
   },
   {
     url: "/models/StarrTree1-optimized_jzc43w.glb",
@@ -121,8 +126,9 @@ export const inheritedAssets = [
   {
     url: "/models/TechRaEye_orb-optimized_navvdf.glb",
     bytes: 2728416,
-    use: "Retained; eye icon does not fit membrane family",
+    use: "Restored for third-eye Ventures & Inventions",
   },
 ] as const;
 /** No Cloudinary delivery URL was found in the source or available full history. */
 export const cloudinaryPublicUrls: readonly string[] = [];
+

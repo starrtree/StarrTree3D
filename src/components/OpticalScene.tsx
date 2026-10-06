@@ -1,7 +1,7 @@
 import { Suspense, useEffect, useMemo, useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Environment, Lightformer, useGLTF } from "@react-three/drei";
-import { Group, Mesh, MeshPhysicalMaterial } from "three";
+import { Box3, Vector3, Group, Mesh, MeshPhysicalMaterial } from "three";
 import { fruitAssets, type FruitWorldId } from "../data/assets";
 function OpticalModel({
   id,
@@ -12,7 +12,7 @@ function OpticalModel({
   color: string;
   onReady: () => void;
 }) {
-  const { scene } = useGLTF(fruitAssets[id].model);
+  const { scene } = useGLTF(fruitAssets[id].model, `${import.meta.env.BASE_URL}draco/`);
   const group = useRef<Group>(null);
   useFrame(({ clock }) => {
     if (!group.current) return;
@@ -24,6 +24,10 @@ function OpticalModel({
     const copy = scene.clone(true);
     copy.traverse((node) => {
       if (node instanceof Mesh) {
+        if (fruitAssets[id].preserveMaterials) {
+          node.material = Array.isArray(node.material) ? node.material.map(m => m.clone()) : node.material.clone();
+          return;
+        }
         const core = /energy|nucleus|connection|aperture|inner/i.test(
           node.name,
         );
@@ -43,15 +47,23 @@ function OpticalModel({
         });
       }
     });
-    return copy;
-  }, [scene, color]);
+    const box = new Box3().setFromObject(copy);
+    const size = box.getSize(new Vector3());
+    const center = box.getCenter(new Vector3());
+    copy.position.sub(center);
+    const normalized = new Group();
+    normalized.add(copy);
+    normalized.scale.setScalar(2.7 / Math.max(size.x, size.y, size.z));
+    return normalized;
+  }, [scene, color, id]);
   useEffect(() => {
     onReady();
     return () => {
       model.traverse((node) => {
         if (node instanceof Mesh) {
           const m = node.material;
-          if (!Array.isArray(m)) m.dispose();
+          if (Array.isArray(m)) m.forEach(material => material.dispose());
+          else m.dispose();
         }
       });
     };
@@ -103,3 +115,4 @@ export default function OpticalScene({
     </Canvas>
   );
 }
+

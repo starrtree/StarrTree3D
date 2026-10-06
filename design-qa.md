@@ -49,3 +49,8 @@ Chromium desktop and emulated phone viewport were tested. No physical iPhone/Saf
 
 Further optical-glass refinement; a future film whose branches follow the exact StarrTree logo; a future StarrVis guide. These are not required for the current functional cinematic checkpoint.
 
+
+## October 6 — original models, pinned studio, HUD destinations
+Restored TV, bio-orb, keyboard console and mechanical eye using inherited GLBs, preserving original textures. Added transparent model posters. Source references remain local public files, not newly discovered Cloudinary URLs. AI tetrahedron still needs an exact file/link.
+Representative desktop 1440x1000 and mobile 390x844 checks passed: no horizontal overflow or broken images; HUD title expands into description; studio remained at viewport top 0 after scrollY 550 while film advanced to 6.692 seconds. Evidence: hud-callouts-desktop.png, hud-mobile.png, pinned-studio-desktop.png in task outputs. Physical sensor tilt remains untested. Existing direct Services/All Items directory and commerce logic are unchanged.
+Technique references revisited: https://gsap.com/docs/v3/Plugins/ScrollTrigger/ and https://github.com/dashersw/liquid-glass-js from saved UI library audit. Adapted the optical vocabulary with CSS highlights, blur and pointer tilt; did not install the page-capture glass library or claim physically accurate refraction for HTML.

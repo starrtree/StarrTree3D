@@ -32,7 +32,7 @@ export default function StudioArrival() {
       setPhase('scroll');
     };
     const trigger = ScrollTrigger.create({
-      trigger: root.current, start: 'top top', end: 'bottom 42%',
+      trigger: root.current, start: 'top top', end: 'bottom bottom',
       onUpdate: self => {
         progress = self.progress;
         physics.target = halfway + progress * (end - halfway);
@@ -46,7 +46,7 @@ export default function StudioArrival() {
         setBar(film.currentTime / film.duration);
         return;
       }
-      // Bounded damped spring. Native scrolling is never intercepted or pinned.
+      // Bounded damped spring. Native scroll drives a sticky scene; overlays travel independently.
       const dt = Math.min(delta / 1000, 0.035);
       physics.velocity += (physics.target - physics.time) * 95 * dt;
       physics.velocity *= Math.exp(-18 * dt);
@@ -57,12 +57,13 @@ export default function StudioArrival() {
     };
     gsap.ticker.add(tick);
     const context = gsap.context(() => {
-      const timeline = gsap.timeline({ scrollTrigger: { trigger: root.current, start: 'top top', end: 'bottom 35%', scrub: 0.65 } });
+      const timeline = gsap.timeline({ scrollTrigger: { trigger: root.current, start: 'top top', end: 'bottom bottom', scrub: 0.65 } });
       timeline.fromTo('.studio-arrival-title img', { y: 42, scale: 0.88, opacity: 0.35 }, { y: -28, scale: 1, opacity: 1, duration: 0.4 })
         .fromTo('.studio-arrival-title .cinema-eyebrow', { y: 18, opacity: 0 }, { y: -12, opacity: 1, duration: 0.25 }, 0)
         .fromTo('.studio-arrival-title > p:last-child', { y: 35, opacity: 0 }, { y: -18, opacity: 1, duration: 0.3 }, 0.12)
         .to('.studio-arrival-title', { y: -100, opacity: 0, duration: 0.3 }, 0.7);
-      gsap.to('.studio-media', { y: 90, ease: 'none', scrollTrigger: { trigger: root.current, start: 'top top', end: 'bottom top', scrub: 0.6 } });
+      timeline.fromTo('.studio-chapter', { y: 120, opacity: 0 }, { y: 0, opacity: 1, duration: 0.22 }, 0.45)
+        .to('.studio-chapter', { y: -70, opacity: 0, duration: 0.2 }, 0.8);
     }, root);
     void film.play().catch(enterScroll);
     return () => { film.pause(); gsap.ticker.remove(tick); trigger.kill(); context.revert(); };
@@ -77,6 +78,7 @@ export default function StudioArrival() {
       <div className="studio-arrival-shade" />
       <a className="studio-back" href="#/">← The seven worlds</a>
       <div className="studio-arrival-title"><p className="cinema-eyebrow">WELCOME TO</p><img src={cinema.studioLogo} alt="StarrVerse Studios" /><p>Where imagination takes form.</p></div>
+      <div className="studio-chapter"><span>ART / SOUND / IMAGINATION</span><h2>Give your vision<br />a universe.</h2><p>Films. Photography. Music. Worlds worth entering.</p></div>
       <div className="studio-scroll-cue"><span>{!motion ? 'THE STUDIO IS OPEN' : phase === 'opening' ? 'THE WORLD IS WAKING · SCROLL TO TAKE OVER' : 'YOUR SCROLL. YOUR JOURNEY.'}</span><button onClick={() => document.getElementById('world-destinations')?.scrollIntoView({ behavior: 'auto' })}>Explore the work ↓</button></div>
       <div className="studio-progress" ref={bar} />
     </div>

@@ -15,6 +15,7 @@ import StarrFruit from "./components/StarrFruit";
 import CinematicHome from "./components/CinematicHome";
 import SeedEntrance from "./components/SeedEntrance";
 import StudioArrival from "./components/StudioArrival";
+import HudDestinations from "./components/HudDestinations";
 import { ExperienceProvider, ExperienceControls, useExperience } from "./components/Experience";
 import { cinema } from "./data/cinema";
 const MusicCatalog = lazy(() => import("../app/MusicCatalog"));
@@ -269,13 +270,7 @@ function WorldPage({
           </button>
         ))}
       </div>
-      <div className="st-items">
-        {own
-          .filter((i) => filter === "All" || i.kind === filter)
-          .map((i) => (
-            <ItemCard key={i.id} item={i} onOpen={onOpen} />
-          ))}
-      </div>
+      <HudDestinations items={own.filter(i => filter === "All" || i.kind === filter)} onOpen={onOpen} />
       <nav className="st-world-switch" aria-label="Other worlds">
         {worlds
           .filter((w) => w.id !== world.id)

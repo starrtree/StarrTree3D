@@ -1,0 +1,6 @@
+<!doctype html><html><head><script type="importmap">{"imports":{"three":"/node_modules/three/build/three.module.js","three/addons/":"/node_modules/three/examples/jsm/"}}</script></head><body style="margin:0;background:#080a12"><script type="module">
+import * as T from 'three';import{GLTFLoader}from'three/addons/loaders/GLTFLoader.js';
+import{DRACOLoader}from'three/addons/loaders/DRACOLoader.js';const loader=new GLTFLoader();loader.setDRACOLoader(new DRACOLoader().setDecoderPath('/node_modules/three/examples/jsm/libs/draco/gltf/'));const r=new T.WebGLRenderer({alpha:true,antialias:true,preserveDrawingBuffer:true});r.setSize(640,640);document.body.appendChild(r.domElement);const s=new T.Scene();const c=new T.PerspectiveCamera(36,1,.1,100);c.position.set(.35,2.25,6.5);c.lookAt(0,0,0);s.add(new T.HemisphereLight(0xc9ddff,0x665544,2));const l=new T.DirectionalLight(0xffffff,3);l.position.set(3,5,4);s.add(l);const q=new T.DirectionalLight(0x9988ff,2);q.position.set(-3,2,-1);s.add(q);let old;
+window.renderModel=async(url)=>{if(old)s.remove(old);const g=await loader.loadAsync(url);const b=new T.Box3().setFromObject(g.scene),v=b.getSize(new T.Vector3()),center=b.getCenter(new T.Vector3());g.scene.position.sub(center);old=new T.Group();old.add(g.scene);old.scale.setScalar(2.7/Math.max(v.x,v.y,v.z));s.add(old);r.render(s,c);return true};
+</script></body></html>
+

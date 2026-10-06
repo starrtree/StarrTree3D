@@ -146,3 +146,13 @@ body { background:#060609; }
   .studio-flow .studio-scroll-cue { bottom:15%; }
   .studio-flow .studio-arrival-title { bottom:28%; }
 }
+/* Pinned film chapter: only overlays travel until this scene is complete. */
+.studio-flow.studio-arrival.is-scrubbed{height:260svh}
+.studio-flow .studio-sticky{position:sticky;top:0;height:100svh;min-height:550px}
+.studio-flow .studio-media{inset:0}
+.studio-flow .studio-arrival-title{bottom:23%}
+.studio-flow .studio-scroll-cue{bottom:10%}
+.studio-chapter{position:absolute;left:9%;bottom:25%;max-width:470px;opacity:0;pointer-events:none;text-shadow:0 3px 25px #000;background:linear-gradient(90deg,#07080b99,transparent);padding:24px}
+.studio-chapter span{font-size:10px;letter-spacing:.2em;color:#d9bf89}.studio-chapter h2{font:clamp(34px,5vw,70px)/1.05 Georgia,serif;color:#fff4df;margin:18px 0}.studio-chapter p{font-size:14px;color:#d8d0c5}
+@media(max-width:700px){.studio-flow .studio-sticky{height:100svh;min-height:550px}.studio-flow .studio-media{top:85px}.studio-chapter{left:5%;right:5%;bottom:23%;padding:20px}.studio-flow .studio-arrival-title{bottom:25%}.studio-flow .studio-scroll-cue{bottom:10%}}
+@media(prefers-reduced-motion:reduce){.studio-flow.studio-arrival.is-scrubbed{height:auto}.studio-flow .studio-sticky{position:relative}}

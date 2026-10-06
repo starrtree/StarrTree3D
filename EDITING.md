@@ -78,3 +78,9 @@ The new experience is normal React + CSS + GSAP. No external editor or account i
 ## Existing content and commerce editing guide
 
 
+
+## October 6 visual refinement
+World pages now use `src/components/HudDestinations.tsx` and `hud.css`: alternating glass title capsules, expandable descriptions, pointer highlights and optional permission-gated phone tilt. Services and All Items retain their direct searchable directory layout. All labels remain HTML.
+`StudioArrival.tsx` now holds its video in a sticky viewport for a 260svh chapter. First-half autoplay, spring-smoothed second-half seeking and overlay motion are retained. It releases into the page at the chapter end. A second film is pending a supplied asset.
+Four preserved original GLBs are assigned in `src/data/assets.ts`; `preserveMaterials: true` keeps their texture maps. The third-eye Eye of Ra is assigned to Ventures. The Earth-textured tetrahedron is not identified, so AI retains its existing sculpture. No private Cloudinary login is required for these local copies. Transparent posters were rendered from the original models using `scripts/model-poster-preview.html` (open through Vite; call `renderModel('/models/filename.glb')`, then export the canvas as PNG). Local Draco decoder files remove the runtime decoder CDN dependency.
+Phone sensor behavior needs a physical device check; browser emulation verifies layout and touch-sized controls only. Reduced motion keeps the still and readable HTML.
