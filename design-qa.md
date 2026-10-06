@@ -2,6 +2,8 @@
 
 final result: passed
 
+Latest revision: combined intro and flowing studio scroll verified on https://starrtree.github.io/StarrTree3D/ at 390 x 844. See CINEMATIC-CHECKPOINT.md for measured playback/scroll results and current evidence. Desktop verified locally at 1440 x 1000. Earlier screenshots below document the previous checkpoint.
+
 ## Scope and visual truth
 
 User reference: `C:/Users/maxth/Downloads/StarrX New Hero (with home UI).png` (1487 × 1058), plus the supplied hovering StarrX film, portrait hero, exact StarrSeed and StarrVerse Studios logo. The latest instruction intentionally changes the homepage to the hovering film and assigns the tree sanctuary/rise film to Art & Media. This is an adaptation, not a pixel-identical reproduction of the mockup.
@@ -46,3 +48,4 @@ Chromium desktop and emulated phone viewport were tested. No physical iPhone/Saf
 ## Optional polish
 
 Further optical-glass refinement; a future film whose branches follow the exact StarrTree logo; a future StarrVis guide. These are not required for the current functional cinematic checkpoint.
+

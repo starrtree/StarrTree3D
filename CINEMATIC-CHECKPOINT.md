@@ -1,5 +1,16 @@
 # Cinematic checkpoint — October 5, 2026
 
+## Latest published checkpoint
+
+- Live phone/desktop URL: https://starrtree.github.io/StarrTree3D/
+- Editable source: `redesign/seven-worlds`, implementation commit `46208c5`.
+- Built deployment: `preview/cinematic-site`, commit `069fd17`. GitHub Pages publishes this branch root; no custom domain was set.
+- Combined muted intro reveals home and triggers the second impact at configured 0.95 seconds, continues uninterrupted, then hands off to the idle loop.
+- Studio rise autoplays to halfway, then native page scrolling seeks the remaining film with spring smoothing and scroll-linked logo/text reveals. Header composition leaves the face clear.
+- Production Pages build passes. Public URL verified at 390 x 844: combined film loaded, homepage revealed, no horizontal overflow. Studio paused at 5.0007 seconds, then scrolling the page 300px advanced film to 7.4297 seconds. No browser errors reported.
+- Desktop verification at 1440 x 1000 used the same production build locally. Physical phone hardware and audible speaker output were not tested.
+- Evidence: `outputs/phone-preview-live.png`, `outputs/studio-public-mobile.png`, `outputs/studio-flow-desktop.png` in the parent task directory.
+
 ## View and edit
 
 - Development: http://127.0.0.1:4173/
@@ -10,7 +21,7 @@
 
 ## Implemented
 
-Exact StarrSeed entrance with gold/green activation, explicit sound and silent entries, both supplied flight angles, skip/replay controls, animated desktop hover-film homepage, mobile portrait composition, seven stable world controls, selected-world entrance panel, shared world/detail layouts, persistent Services/All Items/Search, animated optical sculptures, still/reduced-motion fallbacks, StarrVerse Studios logo and Art/Music cross-links, scroll-driven studio rise and final still, opt-in 0nly_1 soundtrack and separate supplied impact effects.
+Exact StarrSeed entrance with gold/green activation, explicit sound and silent entries, the combined StarrTree-StarrX intro (homepage reveal at 0.95 seconds while the film continues), skip/replay controls, animated desktop hover-film homepage, mobile portrait composition, seven stable world controls, selected-world entrance panel, shared world/detail layouts, persistent Services/All Items/Search, animated optical sculptures, still/reduced-motion fallbacks, StarrVerse Studios logo and Art/Music cross-links, scroll-driven studio rise and final still, opt-in 0nly_1 soundtrack and separate supplied impact effects.
 
 Source video audio is removed. Source files in Downloads were not modified. `scripts/prepare-cinematic-media.mjs` reproduces optimized derivatives; `src/data/cinema.ts` is the editable manifest. Existing Blender GLBs/posters were reused. No new Blender scenes, Cloudinary sessions, Spline integrations or replacement logos were needed.
 
@@ -30,12 +41,13 @@ The remote backup `backup/pre-redesign-2026-10-03` was re-verified at `18cb93c63
 
 StarrTreeGPT, production deployment, DNS and live Stripe were not changed.
 
-## Hosted preview blocker and exact next step
+## Earlier Vercel limitation (superseded by GitHub Pages)
 
-The connected StarrTree Vercel account returned **403 Forbidden: You don't have permission to create the project** when creating the separate `starrtree3d` project linked to `starrtree/StarrTree3D`. No hosted preview URL is claimed.
+The connected StarrTree Vercel account returned **403 Forbidden: You don't have permission to create the project** when creating the separate `starrtree3d` project linked to `starrtree/StarrTree3D`. GitHub Pages now provides the verified public preview below; Vercel is optional.
 
 Next step: grant project-creation permission to the StarrTree Vercel connection, or sign into the Vercel CLI with an account authorized for the StarrTree team (`npx vercel login`). Then create/link `starrtree3d` to this repository and deploy `redesign/seven-worlds` as a Preview with Vite, `npm run build`, output `dist`, Node 22+. Do not promote it or change starrtree.org.
 
 ## Usage
 
 Latest observed account-wide weekly meter: 69% consumed, 31% remaining. This is not a separate Astra meter. Work stops because the bounded implementation/review pass is finished, not because the remaining allowance needs to be spent.
+
