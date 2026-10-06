@@ -143,4 +143,6 @@ body { background:#060609; }
   .studio-route .st-header { background:#07080bb0; }
   .studio-flow .studio-scroll-cue { gap:12px; }
   .studio-flow .studio-scroll-cue span { max-width:160px; line-height:1.6; }
+  .studio-flow .studio-scroll-cue { bottom:15%; }
+  .studio-flow .studio-arrival-title { bottom:28%; }
 }
