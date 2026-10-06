@@ -17,8 +17,7 @@ const images = {
 };
 for (const [input, output] of Object.entries(images)) run(input,output,['-frames:v','1','-c:v','libwebp','-quality','88']);
 for (const [input, output, extra] of [
- ['StarrX flying away.mp4','flight-away.mp4',['-t','6']],
- ['StarrX flying towards.mp4','flight-towards.mp4',['-t','6']],
+ ['StarrTree-StarrX Intro.mp4','starrtree-intro.mp4',[]],
  ['StarrX_Rises_Hero.mp4','studio-rise.mp4',['-g','12','-keyint_min','12']],
  ['StarrX-Hover.webm','home-hover.mp4',[]],
 ]) run(input,output,['-an','-vf','scale=1280:-2','-c:v','libx264','-preset','fast','-crf','25','-pix_fmt','yuv420p','-movflags','+faststart',...extra]);

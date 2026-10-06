@@ -21,6 +21,8 @@ export function ExperienceProvider({ children }: { children: ReactNode }) {
     enabled.current = true;
     if (!context.current || context.current.state === 'closed') context.current = new AudioContext();
     void context.current.resume();
+    const ctx = context.current;
+    if (!sounds.current.arrival) void fetch(cinema.effects.arrival).then(r => r.arrayBuffer()).then(data => ctx.decodeAudioData(data)).then(buffer => { sounds.current.arrival = buffer; }).catch(() => {});
     if (song.current) {
       song.current.volume = 0.22;
       void song.current.play().then(() => setSound(true)).catch(() => { enabled.current = false; setSound(false); });

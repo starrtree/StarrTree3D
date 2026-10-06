@@ -4,13 +4,13 @@ import { worlds, type World } from '../data/content';
 import { fruitAssets } from '../data/assets';
 import { cinema } from '../data/cinema';
 import { useExperience } from './Experience';
-export default function CinematicHome({ onAbout, active }: { onAbout: () => void; active: boolean }) {
+export default function CinematicHome({ onAbout, active, introPlaying = false }: { onAbout: () => void; active: boolean; introPlaying?: boolean }) {
   const [selected, setSelected] = useState<World | null>(null);
   const root = useRef<HTMLElement>(null);
   const video = useRef<HTMLVideoElement>(null);
   const { motion } = useExperience();
   useEffect(() => {
-    if (!active || !motion) { video.current?.pause(); return; }
+    if (!active || !motion || introPlaying) { video.current?.pause(); return; }
     const observer = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting && !document.hidden) void video.current?.play().catch(() => {});
       else video.current?.pause();
@@ -19,7 +19,7 @@ export default function CinematicHome({ onAbout, active }: { onAbout: () => void
     const visibility = () => { if (document.hidden) video.current?.pause(); else void video.current?.play().catch(() => {}); };
     document.addEventListener('visibilitychange', visibility);
     return () => { observer.disconnect(); document.removeEventListener('visibilitychange', visibility); video.current?.pause(); };
-  }, [active, motion]);
+  }, [active, motion, introPlaying]);
   useEffect(() => {
     if (!active || !motion) return;
     const context = gsap.context(() => {
@@ -31,7 +31,8 @@ export default function CinematicHome({ onAbout, active }: { onAbout: () => void
   return <>
     <section ref={root} className={`universe ${motion ? '' : 'motion-paused'}`} aria-label="Explore the StarrTree universe">
       <picture className="universe-backdrop"><source media="(max-width: 700px)" srcSet={cinema.mobilePoster} /><img src={cinema.homePoster} alt="StarrX radiates golden light beneath seven luminous worlds" /></picture>
-      {active && motion && <video className="universe-video" ref={video} src={cinema.homeVideo} poster={cinema.homePoster} muted playsInline loop preload="metadata" aria-hidden="true" />}
+      {motion && <video className="universe-video" ref={video} src={cinema.homeVideo} poster={cinema.homePoster} muted playsInline loop preload="auto" aria-hidden="true" />}
+      <div id="intro-film-host" />
       <div className="universe-shade" />
       <div className="universe-coordinate">MAX STARR <span>ENGINEER · ARTIST · EDUCATOR</span></div>
       <button className="human-at-center" onClick={onAbout}><span>STARRX</span><small>THE HUMAN AT THE CENTER ↗</small></button>

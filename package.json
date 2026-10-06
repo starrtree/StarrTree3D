@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
+    "build:pages": "npm run build -- --base=/StarrTree3D/ && node scripts/prepare-pages.mjs",
     "preview": "vite preview --host 127.0.0.1 --port 4173",
     "test": "node --test tests/commerce.test.mjs"
   },

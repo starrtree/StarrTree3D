@@ -4,6 +4,10 @@ This is a normal React + TypeScript + Vite project. Editing does not require Ast
 
 ## Run and build
 
+The phone preview uses GitHub Pages at `https://starrtree.github.io/StarrTree3D/`. Source remains on `redesign/seven-worlds`; the separate `preview/cinematic-site` branch contains the built site only. Use `npm run build:pages` for that host. `scripts/prepare-pages.mjs` rebases public media URLs for the repository subdirectory. Publish the contents of `dist` to the deployment branch, including `.nojekyll`; never copy a `CNAME` or change starrtree.org.
+
+The combined intro is `cinema.introVideo` in `src/data/cinema.ts`. `homeRevealSeconds: 0.95` controls the homepage reveal and second impact; the same video continues until its end, then the idle loop starts. The original video audio is removed. StudioArrival autoplays to halfway and then uses a damped spring for scroll seeking. ScrollTrigger animates the logo/text and media parallax while the page itself moves normally; nothing is pinned.
+
 Use Node.js 22.13+ (tested with Node 24). In the repository folder:
 
 ```sh

@@ -294,7 +294,9 @@ function AppContent() {
   const [route, setRoute] = useState(() => location.hash.slice(1) || "/");
   const [item, setItem] = useState<Item | null>(null);
   const [about, setAbout] = useState(false);
+  const [introRevealed, setIntroRevealed] = useState(false);
   const [intro, setIntro] = useState(() => {
+    if (location.hash && location.hash !== '#/') return false;
     try {
       return !sessionStorage.getItem("starrtree:cinema:v3");
     } catch {
@@ -338,7 +340,7 @@ function AppContent() {
         .includes(query.toLowerCase().trim()),
   );
   return (
-    <div className={`st-app ${motion ? "" : "motion-paused"}`} >
+    <div className={`st-app ${motion ? "" : "motion-paused"} ${world?.id === "art" ? "studio-route" : ""} ${intro && !introRevealed ? "intro-pending" : ""}`} >
       <a
         href="#st-main"
         className="st-skip"
@@ -380,7 +382,7 @@ function AppContent() {
       </header>
       <main id="st-main" ref={main} tabIndex={-1} className="st-main">
         {home ? (
-          <CinematicHome onAbout={() => setAbout(true)} active={!intro} />
+          <CinematicHome onAbout={() => setAbout(true)} active={!intro || introRevealed} introPlaying={intro} />
         ) : world ? (
           <WorldPage key={world.id} world={world} onOpen={openItem} />
         ) : (
@@ -478,7 +480,7 @@ function AppContent() {
         <a href="#/">STARRTREE</a>
         <span>One creation unlocks the next.</span>
         <small>Frequencies are symbolic. No healing claims.</small>
-        <button onClick={() => setIntro(true)}>Replay welcome</button>
+        <button onClick={() => { location.hash = '/'; setIntroRevealed(false); setIntro(true); }}>Replay welcome</button>
       </footer>
       {item && <ItemDetail item={item} onClose={() => setItem(null)} />}
       {about && (
@@ -516,7 +518,7 @@ function AppContent() {
         </Dialog>
       )}
       <ExperienceControls />
-      {intro && <SeedEntrance onComplete={leaveIntro} />}
+      {intro && <SeedEntrance onReveal={() => setIntroRevealed(true)} onComplete={leaveIntro} />}
     </div>
   );
 }
