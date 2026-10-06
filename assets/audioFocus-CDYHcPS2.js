@@ -1,0 +1,1 @@
+function e(e){document.querySelectorAll(`audio`).forEach(t=>{t!==e&&t.pause()}),document.querySelectorAll(`iframe[src*="youtube-nocookie.com/embed"]`).forEach(e=>{e.contentWindow?.postMessage(JSON.stringify({event:`command`,func:`pauseVideo`,args:[]}),`https://www.youtube-nocookie.com`)})}export{e as t};
