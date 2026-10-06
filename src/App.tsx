@@ -16,6 +16,7 @@ import CinematicHome from "./components/CinematicHome";
 import SeedEntrance from "./components/SeedEntrance";
 import StudioArrival from "./components/StudioArrival";
 import HudDestinations from "./components/HudDestinations";
+import VentureEye from "./components/VentureEye";
 import { ExperienceProvider, ExperienceControls, useExperience } from "./components/Experience";
 import { cinema } from "./data/cinema";
 const MusicCatalog = lazy(() => import("../app/MusicCatalog"));
@@ -186,7 +187,8 @@ function WorldPage({
   return (
     <>
       {world.id === "art" && <StudioArrival />}
-    <section id="world-destinations" className="st-world" style={{ ...tone(world.color), "--scene-image": `url(${world.id === "art" || world.id === "music" ? cinema.studioPoster : world.image})` } as CSSProperties}>
+    <section id="world-destinations" className={`st-world ${world.id === "ventures" ? "st-world-ventures" : ""}`} style={{ ...tone(world.color), "--scene-image": `url(${world.id === "art" || world.id === "music" ? cinema.studioPoster : world.image})` } as CSSProperties}>
+      {world.id === "ventures" && <VentureEye />}
       <a className="st-back" href="#/">
         ← All seven worlds
       </a>

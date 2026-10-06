@@ -13,6 +13,8 @@ export const cinema = {
   studioPoster: '/cinema/studio-hero.webp',
   studioEnd: '/cinema/studio-end.webp',
   studioLogo: '/cinema/starrverse-logo.webp',
+  venturesVideo: '/cinema/ventures-blink.mp4',
+  venturesPoster: '/cinema/ventures-eye.webp',
   portrait: '/cinema/starrx-card.webp',
   guide: '/cinema/starrvis.webp',
   music: { src: '/cinema/only-1.m4a', title: '0nly_1', artist: 'MAX STARR', status: 'Unreleased' },
