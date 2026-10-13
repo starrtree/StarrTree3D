@@ -1,7 +1,7 @@
 /** Public, user-supplied media. Swap paths here; never put credentials in this file. */
 export const cinema = {
   seed: '/cinema/starrseed.jpg',
-  introVideo: '/cinema/starrtree-intro.mp4',
+  introVideo: '/cinema/starrtree-intro-sound.mp4',
   homeRevealSeconds: 0.95,
   flightPoster: '/cinema/flight-poster.webp',
   homeVideo: '/cinema/home-hover.mp4',
