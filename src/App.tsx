@@ -17,6 +17,10 @@ import SeedEntrance from "./components/SeedEntrance";
 import StudioArrival from "./components/StudioArrival";
 import HudDestinations from "./components/HudDestinations";
 import VentureEye from "./components/VentureEye";
+import Starfield from "./components/Starfield";
+import BranchFruit from "./components/BranchFruit";
+import VocalPresets from "./components/VocalPresets";
+import { branchGroups, groupItems } from "./data/branches";
 import { ExperienceProvider, ExperienceControls, useExperience } from "./components/Experience";
 import { cinema } from "./data/cinema";
 const MusicCatalog = lazy(() => import("../app/MusicCatalog"));
@@ -83,6 +87,7 @@ function ItemDetail({ item, onClose }: { item: Item; onClose: () => void }) {
               TEST MODE · No real payments or confirmed bookings. Google
               Calendar is the availability source of truth.
             </p>
+            <p>{item.description}</p>
             <ServiceCard service={service} />
           </>
         ) : (
@@ -98,6 +103,7 @@ function ItemDetail({ item, onClose }: { item: Item; onClose: () => void }) {
             )}
           </>
         )}
+        {item.feature === "presets" && <VocalPresets />}
         {item.feature === "ep" && <EPFeature />}
         {item.feature === "mypov" && <MyPOVFeature />}
         <Suspense fallback={<p role="status">Opening the music archive…</p>}>
@@ -181,13 +187,12 @@ function WorldPage({
   world: World;
   onOpen: (i: Item) => void;
 }) {
-  const [filter, setFilter] = useState("All");
   const own = items.filter((i) => i.worldId === world.id);
-  const kinds = ["All", ...new Set(own.map((i) => i.kind))];
+  const groups = branchGroups(world.id);
   return (
     <>
       {world.id === "art" && <StudioArrival />}
-    <section id="world-destinations" className={`st-world ${world.id === "ventures" ? "st-world-ventures" : ""}`} style={{ ...tone(world.color), "--scene-image": `url(${world.id === "art" || world.id === "music" ? cinema.studioPoster : world.image})` } as CSSProperties}>
+    <section id="world-destinations" className={`st-world branch-${world.id} ${world.id === "ventures" ? "st-world-ventures" : ""}`} style={{ ...tone(world.color), "--scene-image": `url(${world.id === "art" ? cinema.studioPoster : world.image})` } as CSSProperties}>
       {world.id === "ventures" && <VentureEye />}
       <a className="st-back" href="#/">
         ← All seven worlds
@@ -195,16 +200,17 @@ function WorldPage({
       <div className="st-world-hero">
         <div>
           <p className="st-kicker">
-            STARRFRUIT {world.number} / {world.chakra}
+            BRANCH {world.number} / {world.chakra}
           </p>
           <h1>{world.title}</h1>
           <p className="st-world-lead">{world.short}</p>
           <p className="st-description">{world.description}</p>
-          {(world.id === "art" || world.id === "music") && <div className="studio-connection"><img src={cinema.studioLogo} alt="StarrVerse Studios" /><a href={world.id === "art" ? "#/world/music" : "#/world/art"}>{world.id === "art" ? "Explore Music & Sound" : "Explore Art & Media"} ↗</a></div>}
+          {(world.id === "art" || world.id === "music") && <div className="studio-connection">{world.id === "art" ? <img src={cinema.studioLogo} alt="StarrVerse Studios" /> : <a href="#/world/art" aria-label="Enter StarrVerse Studios"><img src={cinema.studioLogo} alt="StarrVerse Studios" /></a>}<a href={world.id === "art" ? "#/world/music" : "#/world/art"}>{world.id === "art" ? "Explore Music & Sound" : "Explore Art & Media"} ↗</a></div>}
           <div className="st-world-meta">
             <span>{own.length} destinations</span>
             <span>{world.frequency} Hz · symbolic</span>
           </div>
+          <a className="st-secondary st-fruit-jump" href="#fruit-browser" onClick={(event) => { event.preventDefault(); document.getElementById('fruit-browser')?.scrollIntoView({ behavior: 'instant', block: 'start' }); document.getElementById('fruit-browser')?.focus({ preventScroll: true }); }}>Browse all {own.length} destinations ↓</a>
           {world.id === "music" && (
             <button
               className="st-primary"
@@ -215,7 +221,7 @@ function WorldPage({
           )}
         </div>
         <div className="st-world-art">
-          <Poster world={world} large />
+          <BranchFruit world={world} />
           <span className="st-art-caption">
             {world.id === "music"
               ? "SOUND BECOMES A WORLD"
@@ -257,22 +263,12 @@ function WorldPage({
           </div>
         </div>
       )}
-      <div className="st-section-heading">
-        <h2>Inside this world</h2>
-        <span>Choose a destination to go deeper</span>
-      </div>
-      <div className="st-filters" aria-label="Filter destinations">
-        {kinds.map((k) => (
-          <button
-            key={k}
-            aria-pressed={filter === k}
-            onClick={() => setFilter(k)}
-          >
-            {k}
-          </button>
-        ))}
-      </div>
-      <HudDestinations items={own.filter(i => filter === "All" || i.kind === filter)} onOpen={onOpen} />
+      <section className="branch-browse" id="fruit-browser" tabIndex={-1} aria-label="Branch destinations">
+        {groups.map(group=><section className="branch-group" key={group.title}>
+          <div className="st-section-heading"><div><p className="st-kicker">{group.parent || 'FOLLOW THIS BRANCH'}</p><h2>{group.title}</h2><p>{group.description}</p></div></div>
+          <HudDestinations items={groupItems(group)} onOpen={onOpen} />
+        </section>)}
+      </section>
       <nav className="st-world-switch" aria-label="Other worlds">
         {worlds
           .filter((w) => w.id !== world.id)
@@ -326,7 +322,7 @@ function AppContent() {
       sessionStorage.setItem("starrtree:cinema:v3", "1");
     } catch {}
   };
-  const openItem = (next: Item) => { stopSound(); setItem(next); };
+  const openItem = (next: Item) => { setItem(next); };
   const found = items.filter(
     (i) =>
       (!services || i.kind === "Service" || i.kind === "Product") &&
@@ -338,6 +334,7 @@ function AppContent() {
   );
   return (
     <div className={`st-app ${motion ? "" : "motion-paused"} ${world?.id === "art" ? "studio-route" : ""} ${intro && !introRevealed ? "intro-pending" : ""}`} >
+      <Starfield />
       <a
         href="#st-main"
         className="st-skip"
@@ -400,6 +397,7 @@ function AppContent() {
                 ? "Websites, creative work, AI systems and sessions. Open an offering for scope, price and next steps."
                 : "Search across services, releases, creative work and ideas taking shape."}
             </p>
+            {services && <p className="st-test-notice">TEST MODE · Explore checkout with test details only. No real purchases or confirmed bookings.</p>}
             <div className="st-search-controls">
               <label>
                 Search

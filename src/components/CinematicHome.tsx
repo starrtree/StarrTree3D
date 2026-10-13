@@ -46,11 +46,11 @@ export default function CinematicHome({ onAbout, active, introPlaying = false }:
       <div className="universe-bottom"><span>SEVEN WORLDS. ONE LIVING ROOT.</span><a href="#/services">WORK WITH MAX <span>↗</span></a></div>
     </section>
     <section id="selected-world" className={`world-selection ${selected ? 'has-selection' : ''}`} style={{ '--world': selected?.color || '#dabb80' } as CSSProperties} aria-live="polite">
-      {selected ? <><img src={fruitAssets[selected.id].poster} alt="" /><div><p className="cinema-eyebrow">STARRFRUIT {selected.number} · {selected.frequency} HZ / SYMBOLIC</p><h2>{selected.title}</h2><p>{selected.short}</p></div><a className="st-primary" href={`#/world/${selected.id}`}>Enter this world <span>→</span></a><button className="selection-close" onClick={() => setSelected(null)} aria-label="Close world selection">×</button></> : <><div><p className="cinema-eyebrow">FOLLOW YOUR CURIOSITY</p><h2>Choose a world. <em>See what grows.</em></h2></div><a href="#/items" className="st-secondary">Or find something directly ↗</a></>}
+      {selected ? <><img src={fruitAssets[selected.id].poster} alt="" /><div><p className="cinema-eyebrow">BRANCH {selected.number} · {selected.frequency} HZ / SYMBOLIC</p><h2>{selected.title}</h2><p>{selected.short}</p></div><a className="st-primary" href={`#/world/${selected.id}`}>Enter this branch <span>→</span></a><button className="selection-close" onClick={() => setSelected(null)} aria-label="Close world selection">×</button></> : <><div><p className="cinema-eyebrow">FOLLOW YOUR CURIOSITY</p><h2>Choose a world. <em>See what grows.</em></h2></div><a href="#/items" className="st-secondary">Or find something directly ↗</a></>}
     </section>
     <section className="studio-teaser">
       <img className="studio-teaser-art" src={cinema.studioPoster} alt="StarrX in a luminous sanctuary of roots, water and starlight" loading="lazy" />
-      <div><p className="cinema-eyebrow">ART & MEDIA × MUSIC & SOUND</p><img className="studio-wordmark" src={cinema.studioLogo} alt="StarrVerse Studios" loading="lazy" /><p>One imagination.<br /><em>Every form of expression.</em></p><a className="st-primary" href="#/world/art">Enter the studio →</a><a className="st-secondary" href="#/world/music">Follow the sound ↗</a></div>
+      <div><p className="cinema-eyebrow">ART & MEDIA × MUSIC & SOUND</p><a href="#/world/art" aria-label="Enter StarrVerse Studios"><img className="studio-wordmark" src={cinema.studioLogo} alt="StarrVerse Studios" loading="lazy" /></a><p>One imagination.<br /><em>Every form of expression.</em></p><a className="st-primary" href="#/world/art">Enter the studio →</a><a className="st-secondary" href="#/world/music">Follow the sound ↗</a></div>
     </section>
   </>;
 }

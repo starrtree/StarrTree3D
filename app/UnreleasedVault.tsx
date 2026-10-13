@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { vaultTracks } from "./vaultTracks";
 import { focusAudio } from "./audioFocus";
+import { useExperience } from "../src/components/Experience";
 
 const KEY = "starrtree:vault-key:v1";
 const POSITIONS = [[20,25],[70,56],[44,72],[77,22],[25,62],[52,35],[20,74],[72,68],[48,22],[28,46]];
@@ -21,7 +22,8 @@ export default function UnreleasedVault() {
   const points = useRef(0);
   const hit = useRef(false);
   const song = useRef<HTMLAudioElement>(null);
-  const player = useRef<HTMLAudioElement>(null);
+  const {playPreview,trackTitle,sound,toggleSound}=useExperience();
+  useEffect(()=>setIsPlaying(sound && trackTitle===active.title),[sound,trackTitle,activeId]);
   const target = useRef<HTMLButtonElement>(null);
   const vaultButton = useRef<HTMLButtonElement>(null);
   const tracksHeading = useRef<HTMLHeadingElement>(null);
@@ -88,15 +90,11 @@ export default function UnreleasedVault() {
     if (relaxed) { hit.current = false; setCaught(false); setRound(current => current + 1); }
   }
 
-  async function playTrack(id: string) {
-    const track = vaultTracks.find(item => item.id === id)!;
-    const audio = player.current;
-    if (!audio) return;
-    if (id === activeId && !audio.paused) { audio.pause(); return; }
-    setError("");
-    const attempt = ++playAttempt.current;
-    if (id !== activeId || !audio.getAttribute("src")) { setIsPlaying(false); audio.src = track.src; setActiveId(id); }
-    try { await audio.play(); } catch { if (attempt === playAttempt.current) setError("This track couldn’t play. Try its play button again."); }
+  async function playTrack(id:string) {
+    const track=vaultTracks.find(track=>track.id===id)!;
+    setActiveId(id);setError('');
+    if(trackTitle===track.title && sound){toggleSound();return;}
+    playPreview(track.src,track.title);
   }
 
   return <section className={`unreleased-vault vault-${phase}`} aria-label="Unreleased music vault">
@@ -126,7 +124,7 @@ export default function UnreleasedVault() {
     </div>}
     {phase === "open" && <div className="vault-library">
       <div className="vault-library-heading"><h3 ref={tracksHeading} tabIndex={-1}>Behind the door</h3><span>13 TRACKS · UNRELEASED</span></div>
-      <div className="vault-listening"><span className={`vault-playing-mark ${isPlaying ? "is-playing" : ""}`} aria-hidden="true">✦</span><div><small>{isPlaying ? "NOW PLAYING" : "SELECT A TRACK"}</small><h4>{active.title}</h4><audio ref={player} controls preload="none" aria-label="Unreleased track player" onPlay={event => focusAudio(event.currentTarget)} onPlaying={() => setIsPlaying(true)} onPause={() => setIsPlaying(false)} onEnded={() => setIsPlaying(false)} onError={() => { setIsPlaying(false); setError("This track couldn’t load. Please try again."); }} /></div></div>
+      <div className="vault-listening"><span className={`vault-playing-mark ${isPlaying ? "is-playing" : ""}`} aria-hidden="true">✦</span><div><small>{isPlaying ? "NOW PLAYING" : "SELECT A TRACK"}</small><h4>{active.title}</h4><span>30-second preview · continues across branches. Use the persistent audio control to pause.</span></div></div>
       <div className="vault-track-list">{vaultTracks.map((track,index) => <button key={track.id} className={track.id === activeId && isPlaying ? "active" : ""} onClick={() => playTrack(track.id)} aria-label={`${track.id === activeId && isPlaying ? "Pause" : "Play"} ${track.title}`}><span>{String(index+1).padStart(2,"0")}</span><strong>{track.title}</strong><small>{Math.floor(track.duration/60)}:{String(track.duration%60).padStart(2,"0")}</small><b aria-hidden="true">{track.id === activeId && isPlaying ? "Ⅱ" : "▶"}</b></button>)}</div>
     </div>}
     {error && <p className="vault-error" role="status">{error}</p>}
