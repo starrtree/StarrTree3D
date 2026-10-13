@@ -246,7 +246,7 @@ export const items: Item[] = [
     status: "Paid booking · test",
     serviceId: "prod_VJ1PfymguBhIn2",
     description:
-      "A two-hour studio block for $120. Maximum one studio booking per evening. Pay first, then manually choose an available Calendar slot.",
+      "A two-hour studio block for $120. Confirm availability first, then pay. StarrTree verifies payment before sending a Google Calendar booking invitation. Maximum one session per evening.",
   },
   {
     id: "mix-master",
@@ -644,7 +644,7 @@ export const items: Item[] = [
     kind: "Concept",
     status: "Documentation pending",
     description:
-      "A venture named in the redesign brief. Details and launch status still need source documentation.",
+      "A planned edutainment platform for kids, turning imagination into creative learning experiences. An early concept, not a launched product.",
   },
   {
     id: "innergym",
@@ -653,7 +653,7 @@ export const items: Item[] = [
     kind: "Concept",
     status: "Documentation pending",
     description:
-      "A venture named in the redesign brief. Scope and launch status still need source documentation.",
+      "A renewable-energy gym concept exploring how physical movement can create useful energy. InnerGym and InnerStarrt are working names, not a confirmed launch.",
   },
   {
     id: "freemix",
@@ -662,7 +662,7 @@ export const items: Item[] = [
     kind: "Concept",
     status: "Proposed collaboration",
     description:
-      "A proposed collaboration named in the redesign brief. No confirmed partnership or launch is claimed.",
+      "A proposed collaboration with Sarah’s EmpowerMe: freestyle group content for expression, confidence and entertainment. An idea in development, not a confirmed program or therapy service.",
   },
 
   {

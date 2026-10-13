@@ -1,12 +1,13 @@
 import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
 import { cinema } from '../data/cinema';
 type EffectName = keyof typeof cinema.effects;
-const ExperienceContext = createContext({ sound: false, motion: true, toggleSound: () => {}, toggleMotion: () => {}, startSound: () => {}, stopSound: () => {}, effect: (_name: EffectName) => {} });
+const ExperienceContext = createContext({ sound: false, motion: true, toggleSound: () => {}, toggleMotion: () => {}, startSound: () => {}, stopSound: () => {}, playIntro: async (_film: HTMLVideoElement) => {}, completeIntro: (_time: number) => {}, effect: (_name: EffectName) => {} });
 export const useExperience = () => useContext(ExperienceContext);
 export function ExperienceProvider({ children }: { children: ReactNode }) {
   const [sound, setSound] = useState(false);
   const [motion, setMotion] = useState(() => !matchMedia('(prefers-reduced-motion: reduce)').matches);
   const song = useRef<HTMLAudioElement>(null);
+  const intro = useRef<HTMLVideoElement | null>(null);
   const context = useRef<AudioContext | null>(null);
   const sounds = useRef<Partial<Record<EffectName, AudioBuffer>>>({});
   const enabled = useRef(false);
@@ -19,6 +20,11 @@ export function ExperienceProvider({ children }: { children: ReactNode }) {
   }, []);
   const startSound = () => {
     enabled.current = true;
+    if (intro.current) {
+      intro.current.muted = false;
+      void intro.current.play().then(() => setSound(true)).catch(() => { enabled.current = false; setSound(false); });
+      return;
+    }
     if (!context.current || context.current.state === 'closed') context.current = new AudioContext();
     void context.current.resume();
     const ctx = context.current;
@@ -30,10 +36,25 @@ export function ExperienceProvider({ children }: { children: ReactNode }) {
   };
   const stopSound = () => {
     enabled.current = false;
+    if (intro.current) intro.current.muted = true;
     song.current?.pause();
     activeEffects.current.forEach(source => { try { source.stop(); } catch { /* already ended */ } });
     activeEffects.current.clear();
     setSound(false);
+  };
+  const playIntro = async (film: HTMLVideoElement) => {
+    song.current?.pause();
+    intro.current = film;
+    film.muted = false;
+    film.volume = 0.22;
+    try { await film.play(); enabled.current = true; setSound(true); }
+    catch (error) { enabled.current = false; setSound(false); throw error; }
+  };
+  const completeIntro = (time: number) => {
+    intro.current?.pause();
+    intro.current = null;
+    if (song.current) song.current.currentTime = time;
+    if (enabled.current) startSound();
   };
   const effect = (name: EffectName) => {
     const ctx = context.current;
@@ -57,7 +78,7 @@ export function ExperienceProvider({ children }: { children: ReactNode }) {
     document.addEventListener('visibilitychange', pause);
     return () => document.removeEventListener('visibilitychange', pause);
   }, []);
-  return <ExperienceContext.Provider value={{ sound, motion, startSound, stopSound, effect, toggleSound: () => sound ? stopSound() : startSound(), toggleMotion: () => setMotion(v => !v) }}>
+  return <ExperienceContext.Provider value={{ sound, motion, startSound, stopSound, playIntro, completeIntro, effect, toggleSound: () => sound ? stopSound() : startSound(), toggleMotion: () => setMotion(v => !v) }}>
     <audio ref={song} src={cinema.music.src} loop preload="none" />
     {children}
   </ExperienceContext.Provider>;

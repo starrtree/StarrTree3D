@@ -205,6 +205,7 @@ function WorldPage({
             <span>{own.length} destinations</span>
             <span>{world.frequency} Hz · symbolic</span>
           </div>
+          <a className="st-secondary st-fruit-jump" href="#fruit-browser" onClick={(event) => { event.preventDefault(); document.getElementById('fruit-browser')?.scrollIntoView({ behavior: 'instant', block: 'start' }); document.getElementById('fruit-browser')?.focus({ preventScroll: true }); }}>Browse all {own.length} fruits ↓</a>
           {world.id === "music" && (
             <button
               className="st-primary"
@@ -257,9 +258,9 @@ function WorldPage({
           </div>
         </div>
       )}
-      <div className="st-section-heading">
-        <h2>Inside this world</h2>
-        <span>Choose a destination to go deeper</span>
+      <div className="st-section-heading" id="fruit-browser" tabIndex={-1}>
+        <h2>Fruit of this branch</h2>
+        <span>See the whole branch. Open only what interests you.</span>
       </div>
       <div className="st-filters" aria-label="Filter destinations">
         {kinds.map((k) => (
@@ -400,6 +401,7 @@ function AppContent() {
                 ? "Websites, creative work, AI systems and sessions. Open an offering for scope, price and next steps."
                 : "Search across services, releases, creative work and ideas taking shape."}
             </p>
+            {services && <p className="st-test-notice">TEST MODE · Explore checkout with test details only. No real purchases or confirmed bookings.</p>}
             <div className="st-search-controls">
               <label>
                 Search

@@ -9,6 +9,7 @@ export default function HudDestinations({ items, onOpen }: { items: Item[]; onOp
   const [selected, setSelected] = useState<string | null>(null);
   const [tilt, setTilt] = useState(false);
   const [notice, setNotice] = useState('');
+  const [view, setView] = useState<'overview' | 'trail'>('overview');
   const { motion } = useExperience();
   useEffect(() => {
     const observer = new IntersectionObserver(entries => entries.forEach(entry => {
@@ -41,10 +42,17 @@ export default function HudDestinations({ items, onOpen }: { items: Item[]; onOp
       setTilt(true); setNotice('Tilt enabled. Gently move your phone to shift the light.');
     } catch { setNotice('Tilt is unavailable. Touch navigation still works.'); }
   };
-  return <div ref={root} className={`hud-destinations ${motion ? 'has-motion' : ''}`}>
-    <div className="hud-toolbar"><span>FOLLOW YOUR CURIOSITY</span><button disabled={!motion} aria-pressed={tilt} onClick={enableTilt}>{tilt ? 'Disable phone tilt' : 'Enable phone tilt'}</button></div>
+  return <div ref={root} className={`hud-destinations hud-${view} ${motion ? 'has-motion' : ''}`}>
+    <div className="hud-toolbar">
+      <div className="hud-view-switch" role="group" aria-label="Fruit layout">
+        <button aria-pressed={view === 'overview'} onClick={() => setView('overview')}>At a glance</button>
+        <button aria-pressed={view === 'trail'} onClick={() => setView('trail')}>Branch trail</button>
+      </div>
+      <button disabled={!motion} aria-pressed={tilt} onClick={enableTilt}>{tilt ? 'Disable phone tilt' : 'Enable phone tilt'}</button>
+    </div>
     <p className="hud-notice" role="status">{notice}</p>
     <div className="hud-path" aria-hidden="true" />
+    <div className="hud-fruits">
     {items.map((item, index) => <article key={item.id} className="hud-node" style={{ '--node-index': index } as CSSProperties}>
       <span className="hud-coordinate" aria-hidden="true">{String(index + 1).padStart(2, '0')} /</span>
       <div className="hud-surface" onPointerMove={event => {
@@ -66,5 +74,6 @@ export default function HudDestinations({ items, onOpen }: { items: Item[]; onOp
         </div>}
       </div>
     </article>)}
+    </div>
   </div>;
 }
