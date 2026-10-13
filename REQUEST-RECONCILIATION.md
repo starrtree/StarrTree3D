@@ -47,3 +47,119 @@ Production build and five commerce tests passed. Representative browser checks: 
 
 ## Single production step
 After approving the new review preview, merge its review PR into main; the existing Vercel production integration should deploy main. Confirm that integration's production branch in Vercel when its environment settings can be read. Do not copy source into the built Pages branch.
+
+## Exact current branch and destination order
+
+### 01 Web & Business
+StarrFruit: Root lattice (`/fruit/web.glb`). 396Hz is symbolic.
+
+Build Your Presence:
+1. Starter One-Page Website — Service / Test checkout
+2. Multi-Page Business Website — Service / Test checkout
+3. Shopify / E-commerce Storefront — Service / Test checkout
+4. Website Care Plan — Service / Test subscription
+5. Google Business Profile Cleanup — Service / Test checkout
+6. Local Visibility Setup — Service / Test checkout
+7. Payment + Booking Setup — Service / Test checkout
+8. Interactive 3D Experiences — Service / Enquire
+9. Brand Systems — Service / Enquire
+
+### 02 Art & Media
+StarrFruit: CRONUTS television (`/models/Meshy_AI_Cronuts_A_New_Dream_0717200127_texture-optimized_rjpxfn.glb`). 417Hz is symbolic.
+
+Create Media:
+1. Short-Form Promo Videos — Service / Test checkout
+2. Image Marketing & Brand Design — Service / Test checkout
+3. Brand & Artist Photography — Service / Paid booking · test
+
+Explore Media:
+1. Edited Art Library — Portfolio / Gallery
+2. Instagram Visual Feed — Portfolio / Social archive
+3. TikTok Experiments — Portfolio / Social archive
+4. Film + Music Video — Portfolio / Creative practice
+5. StarrX Universe — Concept / Developing
+
+### 03 AI & Engineering
+StarrFruit: Solar gyroscope (`/fruit/ai.glb`). 528Hz is symbolic.
+
+Build with AI:
+1. AI Receptionist Starter — Service / Setup + subscription · test
+2. Custom GPT / AI Assistant Starter — Service / Test checkout
+3. Automation Workflow Build — Service / Test checkout
+4. AI Web Experiences — Service / Custom scope
+
+Explore Engineering:
+1. MIT Biomechatronics — Portfolio / Research experience
+2. Patti Grace Smith Fellowship — Portfolio / 2022 fellow profile
+
+### 04 Education & Community
+StarrFruit: Living bio-orb (`/models/orb-plant-bio-mv_fvbz1y.glb`). 639Hz is symbolic.
+
+Learn & Create:
+1. AI / Creative Tech Consultation — Service / Paid booking · test
+2. AI Workshop / Training — Service / Discovery first
+3. Youth Workshops — Service / Enquire
+
+Community & Student Work:
+1. Shoot With A Camera — Portfolio / Documented program
+2. SWAC Student Films — Portfolio / Showcase · links pending
+3. Creative AI Club — Portfolio / Documented teaching
+4. Bethany Student Videos — Portfolio / Showcase · links pending
+5. BeBrownBrave — Portfolio / Source-documented collaboration
+
+### 05 Music & Sound
+StarrFruit: Cosmic music console (`/models/Meshy_AI_Cosmic_Arcade_Console_0717200039_texture-optimized_aexkjw.glb`). 741Hz is symbolic.
+
+Listen to Music / Max Starr - Music:
+1. Max Starr - Music Catalog — Release / Release library
+2. Sharks & Starrs — Release / EP · September 18, 2026
+3. MyPOV — Release / Music video
+4. Audio Vault — Portfolio / Works in progress
+5. Max Starr on YouTube — Portfolio / Artist channel
+6. SoundCloud Archive — Portfolio / Archive
+7. BandLab Transmission — Release / Shared track
+8. A 2020 Quarantine Spark — Release / 2020 release
+
+Create Music:
+1. BandLab Vocal Presets — Product / Digital product · test
+2. Portable Home Studio Kit — Service / Packages · enquire
+3. Mix + Master — Service / Test checkout
+4. Custom Theme Song — Service / Test checkout
+5. Artist Features — Service / Enquire
+6. Vocal Preset Collections — Concept / Coming soon
+
+### 06 Ventures & Inventions
+StarrFruit: Mechanical Eye of Ra (`/models/TechRaEye_orb-optimized_navvdf.glb`). 852Hz is symbolic.
+
+Ventures Taking Shape:
+1. OZI — Venture / Building
+2. StarrLign — Venture / Source-listed · launch unverified
+3. StarrBoard — Venture / Source-listed · launch unverified
+4. TIMELESS No Limit — Venture / Documented collective
+
+Ideas & Collaborations:
+1. TIMELESS Social — Portfolio / Collective social page
+2. StarrVis — Concept / Documentation pending
+3. StarrDome — Concept / Documentation pending
+4. InnerGym / InnerStarrt — Concept / Documentation pending
+5. FREEmix Fridays — Concept / Proposed collaboration
+
+### 07 Wisdom & Exploration
+StarrFruit: Crown lenses (`/fruit/wisdom.glb`). 963Hz is symbolic.
+
+Explore Possibility:
+1. Wisdom Pieces — Concept / Collection planned
+2. Creative Philosophy — Concept / Collection planned
+3. Ancient + Emerging — Concept / Collection planned
+4. Path Notes — Concept / Journal planned
+
+## Final deployed verification
+Initial implementation preview: https://starrtree3d-i5mitgdkb-starrtrees-projects.vercel.app at f4deafcfde13da123901d1d48a8dca932203492a (READY, target preview/null). Source branch refine/branch-interactions, draft PR https://github.com/starrtree/StarrTree3D/pull/2. No promotion/merge.
+- Combined intro video and audio streams start at 0.000000 (ffprobe). Browser collection: unmuted film playing, no retry required in this logged-in desktop browser. Same film playing at width390 with no overflow. Browser-policy retry is preserved for environments that reject delayed sound playback; forced rejection was not simulated.
+- Motion-off browser path: no entrance film, seven visible branch controls, no overflow. Ventures uses static eye poster when motion is off. Native OS prefers-reduced-motion initialization was reviewed in code; OS preference was not changed on the user's machine.
+- Deployed mobile Studio: rise paused at1.513s and logo opacity1. After scrollY1688: sticky top0, rise9.918s, idle visible and playing at3.706s.
+- Music: correct Listen/Create headings and catalog/Sharks/MyPOV order; mobile compact screenshot saved. Preset scan animation name branch-scan; free-only links rendered; paid names have no URLs. Private attachment scan: no paid delivery URLs in changed public source/build.
+- Persistent catalog preview: MyPOV playing at0.215s; after closing modal still playing at0.527s. It continued after branch navigation to Art (29.826s), then stopped at the provisional30s limit. Full intro/ambient soundtrack is intentionally retained.
+- Production build and five commerce tests passed. Four exact TEST-mode purchase/deposit/subscription/consultation links checked by tests; no external payment submitted. Existing checkout pages were not re-opened during this pass (cloud session already verified the sandbox destinations).
+- Screenshot evidence in parent task outputs: review-live-mobile.png (390x844), review-live-desktop.png (1440x1000). No physical phone gyro or audible speaker quality test.
+- Remote main remained a14b68e and Pages remained1c70394 after push. Working tree was clean before docs-only final checkpoint.

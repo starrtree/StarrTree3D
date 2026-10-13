@@ -108,4 +108,3 @@ export function ExperienceControls() {
     <button className="motion-control" onClick={toggleMotion} aria-pressed={motion} aria-label={motion ? 'Pause ambient motion' : 'Enable ambient motion'}>{motion ? 'Ⅱ' : '▷'}<span>Motion</span></button>
   </aside>;
 }
-

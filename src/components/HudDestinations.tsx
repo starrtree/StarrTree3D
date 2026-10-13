@@ -100,4 +100,3 @@ export default function HudDestinations({ items, onOpen }: { items: Item[]; onOp
     </div>
   </div>;
 }
-
