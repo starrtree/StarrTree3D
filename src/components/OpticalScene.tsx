@@ -14,9 +14,10 @@ function OpticalModel({
 }) {
   const { scene } = useGLTF(fruitAssets[id].model, `${import.meta.env.BASE_URL}draco/`);
   const group = useRef<Group>(null);
-  useFrame(({ clock }) => {
+  useFrame(({ clock, gl }) => {
     if (!group.current) return;
-    group.current.rotation.y = Math.sin(clock.elapsedTime * 0.18) * 0.22;
+    const orbit = Number(gl.domElement.closest<HTMLElement>("[data-fruit-orbit]")?.dataset.fruitOrbit || 0);
+    group.current.rotation.y += (orbit + Math.sin(clock.elapsedTime * 0.18) * 0.22 - group.current.rotation.y) * 0.06;
     group.current.rotation.z = Math.sin(clock.elapsedTime * 0.14) * 0.04;
     group.current.position.y = Math.sin(clock.elapsedTime * 0.6) * 0.055;
   });

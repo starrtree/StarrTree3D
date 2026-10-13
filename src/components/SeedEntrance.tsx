@@ -15,11 +15,12 @@ export default function SeedEntrance({ onComplete, onReveal }: { onComplete: () 
   const video = useRef<HTMLVideoElement>(null);
   const finished = useRef(false);
   const hasRevealed = useRef(false);
-  const { playIntro, completeIntro, stopSound, motion } = useExperience();
+  const { playIntro, completeIntro, stopSound, primeAudio, effect, motion } = useExperience();
   const reveal = () => {
     if (hasRevealed.current) return;
     hasRevealed.current = true;
     setRevealed(true);
+    effect("arrival");
     onReveal();
   };
   const finish = () => {
@@ -67,6 +68,7 @@ export default function SeedEntrance({ onComplete, onReveal }: { onComplete: () 
   useEffect(() => { if (!motion && stage !== 'seed') finish(); }, [motion]);
   const begin = () => {
     stopSound();
+    primeAudio();
     if (!motion) { finish(); return; }
     setStage('spark');
   };
