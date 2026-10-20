@@ -21,6 +21,7 @@ import { ExperienceProvider, ExperienceControls, useExperience } from "./compone
 import { cinema } from "./data/cinema";
 const MusicCatalog = lazy(() => import("../app/MusicCatalog"));
 const UnreleasedVault = lazy(() => import("../app/UnreleasedVault"));
+const WebsiteOrchard = lazy(() => import("./components/WebsiteOrchard"));
 const tone = (color: string) => ({ "--tone": color }) as CSSProperties;
 function Poster({ world, large = false }: { world: World; large?: boolean }) {
   return (
@@ -183,11 +184,12 @@ function WorldPage({
 }) {
   const [filter, setFilter] = useState("All");
   const own = items.filter((i) => i.worldId === world.id);
-  const kinds = ["All", ...new Set(own.map((i) => i.kind))];
+  const destinations = world.id === "web" ? own.filter((i) => i.kind !== "Portfolio") : own;
+  const kinds = ["All", ...new Set(destinations.map((i) => i.kind))];
   return (
     <>
       {world.id === "art" && <StudioArrival />}
-    <section id="world-destinations" className={`st-world ${world.id === "ventures" ? "st-world-ventures" : ""}`} style={{ ...tone(world.color), "--scene-image": `url(${world.id === "art" || world.id === "music" ? cinema.studioPoster : world.image})` } as CSSProperties}>
+    <section id="world-destinations" className={`st-world ${world.id === "ventures" ? "st-world-ventures" : ""} ${world.id === "web" ? "st-world-web" : ""}`} style={{ ...tone(world.color), "--scene-image": `url(${world.id === "art" || world.id === "music" ? cinema.studioPoster : world.image})` } as CSSProperties}>
       {world.id === "ventures" && <VentureEye />}
       <a className="st-back" href="#/">
         ← All seven worlds
@@ -223,6 +225,7 @@ function WorldPage({
           </span>
         </div>
       </div>
+      {world.id === "web" && <Suspense fallback={<p role="status">Opening the Web Orchard…</p>}><WebsiteOrchard /></Suspense>}
       {world.id === "music" && (
         <div className="st-music-feature">
           <img
@@ -258,8 +261,8 @@ function WorldPage({
         </div>
       )}
       <div className="st-section-heading">
-        <h2>Inside this world</h2>
-        <span>Choose a destination to go deeper</span>
+        <h2>{world.id === "web" ? "Grow your business" : "Inside this world"}</h2>
+        <span>{world.id === "web" ? "Explore website services and growth tools" : "Choose a destination to go deeper"}</span>
       </div>
       <div className="st-filters" aria-label="Filter destinations">
         {kinds.map((k) => (
@@ -272,7 +275,7 @@ function WorldPage({
           </button>
         ))}
       </div>
-      <HudDestinations items={own.filter(i => filter === "All" || i.kind === filter)} onOpen={onOpen} />
+      <HudDestinations items={destinations.filter(i => filter === "All" || i.kind === filter)} onOpen={onOpen} />
       <nav className="st-world-switch" aria-label="Other worlds">
         {worlds
           .filter((w) => w.id !== world.id)
