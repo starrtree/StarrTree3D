@@ -1,3 +1,5 @@
+import { websiteProjects } from "./websites";
+
 /** Readable site content. Commerce rules and payment links remain in commerce-catalog.json. */
 export type WorldId =
   "web" | "art" | "ai" | "education" | "music" | "ventures" | "wisdom";
@@ -188,6 +190,18 @@ export const items: Item[] = [
     description:
       "Stripe and booking setup for $450, paid in full. Third-party fees are separate.",
   },
+  // Portfolio projects stay searchable, while the Web Orchard gives them a
+  // dedicated visual preview. The preview addresses may still be unverified.
+  ...websiteProjects.map((website): Item => ({
+    id: "website-" + website.id,
+    worldId: "web",
+    title: website.name,
+    kind: "Portfolio",
+    status: website.stage + " · preview unverified",
+    description: website.description,
+    href: website.previewUrl,
+    cta: website.previewSource === "homepage" ? "Open listed website" : "Try hosted preview",
+  })),
   {
     id: "poster-design",
     worldId: "art",
