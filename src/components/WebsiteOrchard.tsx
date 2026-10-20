@@ -43,7 +43,7 @@ export default function WebsiteOrchard() {
     });
     observer.observe(frame.current);
     return () => observer.disconnect();
-  }, []);
+  }, [selected.id]);
 
   const select = (project: WebsiteProject) => {
     if (selectedId !== project.id) {
