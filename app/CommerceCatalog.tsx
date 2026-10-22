@@ -6,7 +6,10 @@ import { capacityStatus, testCheckout } from "./commerce-capacity";
 
 type Service = (typeof catalog)[number];
 function contact(service: Service, purpose: string) {
-  return `mailto:hello@starrtree.org?subject=${encodeURIComponent(`${purpose}: ${service.name}`)}&body=${encodeURIComponent(`Service: ${service.name}\n${service.price}\n\nMy name:\nPreferred timing:\nProject scope / booking details:\n\nPlease confirm capacity and, where applicable, Google Calendar availability before payment. I understand test payments do not purchase a real service.`)}`;
+  const nextStep = purpose.startsWith("Review payment")
+    ? "Stripe confirmation reference (do not include card details):\nPlease verify my test payment and send the next step or booking invitation."
+    : "Please confirm capacity and, where applicable, Google Calendar availability before payment.";
+  return `mailto:hello@starrtree.org?subject=${encodeURIComponent(`${purpose}: ${service.name}`)}&body=${encodeURIComponent(`Service: ${service.name}\n${service.price}\n\nMy name:\nPreferred timing:\nProject scope / booking details:\n\n${nextStep}\nI understand test payments do not purchase a real service.`)}`;
 }
 
 export function ServiceCard({ service }: { service: Service }) {
@@ -149,6 +152,9 @@ export function ServiceCard({ service }: { service: Service }) {
                 : "fulfillment and next steps"}
             . Nothing is reserved automatically.
           </p>
+          <a className="commerce-follow-up" href={contact(service, booking ? "Review payment and send booking invitation" : "Review payment and next steps")}>
+            Already checked out? Request {booking ? "your booking invitation" : "next steps"} ↗
+          </a>
         </>
       )}
       {checkoutOpened && (

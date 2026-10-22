@@ -53,4 +53,17 @@ test('D: consultation preserves the exact $150 test checkout and manual calendar
   assert.match(card(item), /After payment verification/);
   assert.match(card(item), /Payment alone does not reserve a slot/);
   assert.ok(!html.includes('calendar.google.com'));
+  assert.match(card(item), /Already checked out\? Request your booking invitation/);
+});
+
+test('Public checkout links stay test-only and follow-up survives initial render', () => {
+  for (const item of catalog) {
+    for (const link of [item.paymentLink, item.setupLink].filter(Boolean)) {
+      assert.match(link, /^https:\/\/buy\.stripe\.com\/test_[A-Za-z0-9]+$/);
+    }
+  }
+  assert.match(card(find('Poster / Flyer Design')), /Already checked out\? Request next steps/);
+  const receptionist = find('AI Receptionist Starter');
+  assert.equal(receptionist.paymentLink, null);
+  assert.ok(receptionist.setupLink);
 });

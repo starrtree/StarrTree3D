@@ -1,8 +1,9 @@
 "use client";
 import { musicReleases } from "./musicReleases";
-import { focusAudio } from "./audioFocus";
+import { useExperience } from "../src/components/Experience";
 
 export default function MusicCatalog() {
+  const {playPreview} = useExperience();
   return <div className="song-list" aria-label="Max Starr release catalog">
     {musicReleases.map((release, index) => (
       <article className={`song-card catalog-release${release.id === "sharks-starrs" ? " featured-ep" : ""}`} key={release.id}>
@@ -18,7 +19,7 @@ export default function MusicCatalog() {
           </a>
           {release.releaseNote && <small>{release.releaseNote}</small>}
         </div>
-        {release.previewUrl && <audio controls preload="none" src={release.previewUrl} onPlay={event => focusAudio(event.currentTarget)} aria-label={`Play ${release.title}`} />}
+        {release.previewUrl && <button className="st-secondary" onClick={()=>playPreview(release.previewUrl!,release.title)}>Play 30-second preview ↗</button>}
       </article>
     ))}
   </div>;

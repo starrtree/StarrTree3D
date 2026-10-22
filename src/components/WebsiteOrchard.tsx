@@ -25,16 +25,29 @@ const projectStyle = (project: WebsiteProject) => ({
 }) as CSSProperties;
 
 /** A separate exhibition space for the Web StarrFruit, not the shared destination HUD. */
-export default function WebsiteOrchard() {
+export default function WebsiteOrchard({onPreviewChange}:{onPreviewChange?:(active:boolean)=>void}) {
   const { motion } = useExperience();
   const [filter, setFilter] = useState("all");
   const [selectedId, setSelectedId] = useState(websiteProjects[0].id);
   const [loadFrame, setLoadFrame] = useState(false);
+  const [frameStatus, setFrameStatus] = useState<'loading'|'loaded'|'timeout'|'error'>('loading');
+  const [attempt, setAttempt] = useState(0);
   const frame = useRef<HTMLDivElement>(null);
   const [frameWidth, setFrameWidth] = useState(920);
   const visible = websiteProjects.filter((project) => projectFilter(project, filter));
   const selected = visible.find((project) => project.id === selectedId) || visible[0];
   const selectedIndex = visible.findIndex((project) => project.id === selected.id);
+  useEffect(() => {
+    onPreviewChange?.(loadFrame);
+    return () => onPreviewChange?.(false);
+  },[loadFrame,onPreviewChange]);
+
+  useEffect(() => {
+    if (!loadFrame || frameStatus !== 'loading') return;
+    const timeout = window.setTimeout(() => setFrameStatus('timeout'),12000);
+    return () => window.clearTimeout(timeout);
+  },[loadFrame,frameStatus,attempt,selected.id]);
+  const openPreview = () => { setFrameStatus('loading'); setAttempt(value=>value+1); setLoadFrame(true); };
 
   useEffect(() => {
     if (!frame.current) return;
@@ -93,18 +106,22 @@ export default function WebsiteOrchard() {
           <div className="wo-browser" key={selected.id}>
             <div className="wo-browser-bar">
               <div className="wo-browser-dots" aria-hidden="true"><i /><i /><i /></div>
-              <div className="wo-browser-url" title={selected.previewUrl}><span aria-hidden="true">⌁</span> {selected.previewUrl.replace(/^https?:\/\//, "")}</div>
+              <div className="wo-browser-url"><span aria-hidden="true">⌁</span> {selected.name} · Project preview</div>
               <span className="wo-browser-glyph" aria-hidden="true">✣</span>
             </div>
             <div className="wo-viewport" ref={frame}>
               {loadFrame ? (
                 <iframe
+                  key={`${selected.id}-${attempt}`}
                   className="wo-live-frame"
                   title={selected.name + " homepage preview"}
                   src={selected.previewUrl}
-                  loading="lazy"
+                  loading="eager"
                   referrerPolicy="no-referrer"
-                  sandbox="allow-scripts allow-same-origin allow-popups"
+                  sandbox="allow-scripts allow-same-origin"
+                  allow="autoplay 'none'; camera 'none'; microphone 'none'; geolocation 'none'"
+                  onLoad={() => setFrameStatus('loaded')}
+                  onError={() => setFrameStatus('error')}
                   style={{ transform: "scale(" + frameWidth / 1280 + ")" }}
                 />
               ) : (
@@ -118,13 +135,13 @@ export default function WebsiteOrchard() {
                   <div className="wo-preview-cta">
                     <span>INTERACTIVE PROJECT WINDOW</span>
                     <strong>{selected.name}</strong>
-                    <button type="button" onClick={() => setLoadFrame(true)}>Load homepage preview <span aria-hidden="true">↗</span></button>
+                    <button type="button" onClick={openPreview}>Load homepage preview <span aria-hidden="true">↗</span></button>
                     <small>The graphic behind this button is an illustrative standby, not a screenshot.</small>
                   </div>
                 </div>
               )}
-              {loadFrame && <p className="wo-frame-note">Live page requested · Some websites block embedded views. Use “Open website” below if blank.</p>}
             </div>
+            {loadFrame && <div className="wo-frame-controls"><p role="status">{frameStatus === 'loading' ? 'Opening this project…' : frameStatus === 'loaded' ? 'Preview requested. If the site blocks embedding, open it in a separate tab.' : 'This preview couldn’t finish loading. Retry or open the website separately.'}</p><button onClick={openPreview}>Retry preview</button><button onClick={() => setLoadFrame(false)}>Close preview</button></div>}
           </div>
           <div className="wo-feature-detail" aria-live="polite">
             <div><p className="wo-project-type">{selected.category} <span>✦</span> {selected.stage}</p><h3>{selected.name}</h3><p>{selected.description}</p></div>
