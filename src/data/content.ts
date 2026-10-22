@@ -15,6 +15,7 @@ export type World = {
   short: string;
   description: string;
   image: string;
+  mobileImage?: string;
 };
 export type Item = {
   id: string;
@@ -27,7 +28,7 @@ export type Item = {
   href?: string;
   cta?: string;
   serviceId?: string;
-  feature?: "mypov" | "ep" | "catalog" | "vault" | "gallery";
+  feature?: "mypov" | "ep" | "catalog" | "vault" | "gallery" | "presets";
 };
 
 // Order here controls the seven-world overview. Frequencies are symbolic art direction.
@@ -43,6 +44,7 @@ export const worlds: World[] = [
     description:
       "Websites that feel like worlds, not templates. Strategic websites, storefronts and everyday business systems built around your story, services and audience.",
     image: "/images/world-tree.webp",
+    mobileImage: "/cinema/oct22/10-Photo-10.webp",
   },
   {
     id: "art",
@@ -54,7 +56,7 @@ export const worlds: World[] = [
     short: "Ideas become images. Images become worlds.",
     description:
       "A living image and video library spanning generative art, editing, cinematic experiments, character design and creative direction.",
-    image: "/images/constellation-maker.webp",
+    image: "/cinema/oct22/12-Photo-12.webp",
   },
   {
     id: "ai",
@@ -66,7 +68,7 @@ export const worlds: World[] = [
     short: "Intelligent tools that turn ideas into momentum.",
     description:
       "Creative technology, project systems and automations designed around the way real people think, build and get work done. Explore the engineering experiences behind the work.",
-    image: "/images/atlas-orb.webp",
+    image: "/images/world-orb.webp",
   },
   {
     id: "education",
@@ -90,7 +92,7 @@ export const worlds: World[] = [
     short: "Find your sound. Follow the signal.",
     description:
       "The Max Starr catalog, music videos, works in progress and practical services for vocal artists building their sound and confidence. Start with Sharks & Starrs and MyPOV.",
-    image: "/images/polarity.webp",
+    image: "/images/atlas-orb.webp",
   },
   {
     id: "ventures",
@@ -102,7 +104,7 @@ export const worlds: World[] = [
     short: "A place for what comes next.",
     description:
       "Project systems, creative ventures and ideas taking shape. Each destination distinguishes documented work, work in progress and concepts that still need definition.",
-    image: "/images/world-orb.webp",
+    image: "/images/tree-eye.webp",
   },
   {
     id: "wisdom",
@@ -115,6 +117,7 @@ export const worlds: World[] = [
     description:
       "Reflections on creativity, technology, nature, discipline and the inner principles that shape the work across every StarrTree branch.",
     image: "/images/tree-eye.webp",
+    mobileImage: "/cinema/oct22/11-Photo-11.webp",
   },
 ];
 
@@ -205,17 +208,17 @@ export const items: Item[] = [
   {
     id: "poster-design",
     worldId: "art",
-    title: "Poster / Flyer Design",
+    title: "Image Marketing & Brand Design",
     kind: "Service",
     status: "Test checkout",
     serviceId: "prod_VJ1Ph6qBjJes0a",
     description:
-      "A poster or flyer for $125, paid upfront, with two revision rounds. Print jobs under $250 are paid upfront.",
+      "Posters, flyers, logos, business cards, stickers and business signs. The existing $125 checkout covers one poster or flyer with two revision rounds; other design and print formats require a separate scope and quote.",
   },
   {
     id: "photo-shoot",
     worldId: "art",
-    title: "Business / Artist Photo Shoot",
+    title: "Brand & Artist Photography",
     kind: "Service",
     status: "Paid booking · test",
     serviceId: "prod_VJ1PU4tWPFnjiw",
@@ -253,19 +256,13 @@ export const items: Item[] = [
       "Custom n8n, API and database work from $1,500. $750 deposit; discovery determines the final quote. Maximum one high-complexity automation implementation at a time.",
   },
   {
-    id: "studio-session",
-    worldId: "music",
-    title: "Studio Recording Session",
-    kind: "Service",
-    status: "Paid booking · test",
-    serviceId: "prod_VJ1PfymguBhIn2",
-    description:
-      "A two-hour studio block for $120. Maximum one studio booking per evening. Pay first, then manually choose an available Calendar slot.",
+    id: "studio-session", worldId: "music", title: "Portable Home Studio Kit", kind: "Service", status: "Packages · enquire",
+    description: "Record and mix vocals on your phone wherever you go. Personal studio-kit packages, setup teaching and portable sessions where Max meets you. Package pricing, equipment, travel and availability are confirmed before booking. The legacy fixed-studio checkout does not purchase this new package.",
   },
   {
     id: "mix-master",
     worldId: "music",
-    title: "Mix + Master — Single Song",
+    title: "Mix + Master",
     kind: "Service",
     status: "Test checkout",
     serviceId: "prod_VJ1PfSiyyPiLgF",
@@ -274,13 +271,14 @@ export const items: Item[] = [
   },
   {
     id: "bandlab-preset",
+    feature: "presets",
     worldId: "music",
-    title: "BandLab Vocal Preset",
+    title: "BandLab Vocal Presets",
     kind: "Product",
     status: "Digital product · test",
     serviceId: "prod_VJ1Q0LFoFxb9hC",
     description:
-      "A $30 digital vocal preset. Preset or download delivery follows payment; this is the catalogued BandLab product, separate from future preset collections.",
+      "Main-vocal and adlib presets, with two free starters. The existing $30 checkout is for one paid preset; confirm your selection before paying. Paid links are delivered manually after verified payment.",
   },
   {
     id: "theme-song",
@@ -295,12 +293,12 @@ export const items: Item[] = [
   {
     id: "promo-edit",
     worldId: "art",
-    title: "Short-Form Promo Edit",
+    title: "Short-Form Promo Videos",
     kind: "Service",
     status: "Test checkout",
     serviceId: "prod_VJ1QZHUlEK0bwX",
     description:
-      "One short-form promo edit from supplied footage and assets for $150, paid upfront.",
+      "Promo videos for brands, artists and businesses. The existing $150 checkout covers one short-form edit from supplied footage and assets. Filming or broader production requires a separate quote.",
   },
   {
     id: "tech-consultation",
@@ -352,7 +350,7 @@ export const items: Item[] = [
   {
     id: "release-catalog",
     worldId: "music",
-    title: "The Max Starr Catalog",
+    title: "Max Starr - Music Catalog",
     kind: "Release",
     status: "Release library",
     description:
@@ -480,15 +478,6 @@ export const items: Item[] = [
     description:
       "Characters, mythology and visual storytelling, listed as developing on the existing site.",
     image: "/images/starborn.webp",
-  },
-  {
-    id: "creative-direction",
-    worldId: "art",
-    title: "Creative Direction",
-    kind: "Service",
-    status: "Enquire",
-    description:
-      "Visual worlds, content systems, music-video concepts and generative campaigns with a clear point of view. Scope and availability are confirmed by enquiry.",
   },
   {
     id: "interactive-3d",
@@ -658,7 +647,7 @@ export const items: Item[] = [
     kind: "Concept",
     status: "Documentation pending",
     description:
-      "A venture named in the redesign brief. Details and launch status still need source documentation.",
+      "A planned edutainment platform for kids, turning imagination into creative learning experiences. An early concept, not a launched product.",
   },
   {
     id: "innergym",
@@ -667,7 +656,7 @@ export const items: Item[] = [
     kind: "Concept",
     status: "Documentation pending",
     description:
-      "A venture named in the redesign brief. Scope and launch status still need source documentation.",
+      "A renewable-energy gym concept exploring how physical movement can create useful energy. InnerGym and InnerStarrt are working names, not a confirmed launch.",
   },
   {
     id: "freemix",
@@ -676,7 +665,7 @@ export const items: Item[] = [
     kind: "Concept",
     status: "Proposed collaboration",
     description:
-      "A proposed collaboration named in the redesign brief. No confirmed partnership or launch is claimed.",
+      "A proposed collaboration with Sarah’s EmpowerMe: freestyle group content for expression, confidence and entertainment. An idea in development, not a confirmed program or therapy service.",
   },
 
   {

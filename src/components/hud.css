@@ -8,3 +8,23 @@
 @media(prefers-reduced-motion:no-preference){.hud-destinations.has-motion .hud-node:not(.is-visible):not(:focus-within){opacity:.3;translate:0 30px}}
 @media(max-width:700px){.hud-node{width:94%;margin:25px 0 45px}.hud-node:nth-of-type(even){margin-left:6%}.hud-path{left:3%}.hud-node:before{display:none}.hud-tab{padding:21px 18px;gap:12px}.hud-tab strong{font-size:21px}.hud-detail{padding:0 22px 24px}.hud-toolbar{font-size:8px;letter-spacing:.1em}.hud-toolbar button{font-size:10px}.hud-surface{border-radius:28px}}
 @media(prefers-reduced-motion:reduce){.hud-node,.hud-surface{transition:none;transform:none}}
+
+/* Compact fruit constellation: stable HTML targets, light moves instead of labels. */
+.hud-view-switch{display:flex;gap:4px;padding:4px;border:1px solid #ffffff22;border-radius:30px}
+.hud-view-switch button{border:0;min-height:40px}
+.hud-view-switch button[aria-pressed=true]{background:color-mix(in srgb,var(--tone) 18%,#11141e);color:#fff;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--tone) 50%,transparent)}
+.hud-overview .hud-fruits{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;align-items:start}
+.hud-overview .hud-node,.hud-overview .hud-node:nth-of-type(even){width:auto;margin:0;opacity:1!important;translate:none!important;min-width:0}
+.hud-overview .hud-node:before,.hud-overview .hud-path{display:none}
+.hud-overview .hud-coordinate{margin:0 0 10px 18px}
+.hud-overview .hud-surface{border-radius:24px;background:radial-gradient(ellipse at var(--light-x) var(--light-y),color-mix(in srgb,var(--tone) 17%,transparent),transparent 70%),linear-gradient(135deg,#1e2230ec,#0c0f18ed);backdrop-filter:blur(10px)}
+.hud-overview .hud-tab{min-height:116px;padding:20px 18px;gap:12px}
+.hud-overview .hud-tab strong{font-size:21px;overflow-wrap:anywhere}
+.hud-overview .hud-tab small{line-height:1.65}
+.hud-overview .hud-detail{padding:0 18px 22px}
+.hud-overview .hud-detail .st-secondary{min-height:44px}
+.hud-overview .hud-surface:focus-within{border-color:var(--tone);box-shadow:0 0 30px color-mix(in srgb,var(--tone) 13%,transparent)}
+@media(hover:hover){.hud-overview .hud-surface:hover{border-color:var(--tone)}}
+@media(max-width:1000px){.hud-overview .hud-fruits{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:550px){.hud-overview .hud-fruits{gap:16px 10px}.hud-overview .hud-tab{padding:15px 12px;gap:8px;min-height:128px}.hud-overview .hud-tab strong{font-size:18px}.hud-overview .hud-tab small{font-size:8px;letter-spacing:.03em}.hud-overview .hud-dot{width:4px;height:4px}.hud-overview .hud-detail{padding:0 12px 18px}.hud-overview .hud-detail p{font-size:13px}.hud-overview .hud-detail img{float:none;width:100%;height:auto}.hud-toolbar{flex-wrap:wrap;gap:12px}.hud-view-switch{flex-shrink:0}}
+.motion-paused .hud-surface{transform:none;transition:none}

@@ -51,13 +51,6 @@ export const websiteProjects: WebsiteProject[] = [
     colors: ["#dfc28b", "#63401c"],
   },
   {
-    id: "kumbayaa", name: "Kumbayaa Hair", category: "Beauty", stage: "Prototype",
-    description: "Beauty and hair brand presentation with an original identity and responsive storefront-style composition.",
-    repoUrl: "https://github.com/starrtree/Kumbayaa-Hair",
-    previewUrl: "https://starrtree.github.io/Kumbayaa-Hair/", previewSource: "pages-candidate",
-    colors: ["#ecb4d5", "#783a6a"],
-  },
-  {
     id: "timeless", name: "TIMELESS No Limit", category: "Lifestyle", stage: "Studio project",
     description: "A visual identity and web experience for a culture-forward creative collective.",
     repoUrl: "https://github.com/starrtree/TIMELESS",
@@ -84,13 +77,6 @@ export const websiteProjects: WebsiteProject[] = [
     repoUrl: "https://github.com/starrtree/ALEAN",
     previewUrl: "https://starrtree.github.io/ALEAN/", previewSource: "pages-candidate",
     colors: ["#92e9ca", "#235d59"],
-  },
-  {
-    id: "imaya", name: "Imaya", category: "Creative", stage: "Prototype",
-    description: "An expressive lightweight website experiment built with HTML, CSS and JavaScript.",
-    repoUrl: "https://github.com/starrtree/imaya",
-    previewUrl: "https://starrtree.github.io/imaya/", previewSource: "pages-candidate",
-    colors: ["#d6b7ff", "#4b386c"],
   },
   {
     id: "starrtree-origin", name: "StarrTree Origin", category: "Agency", stage: "Studio project",

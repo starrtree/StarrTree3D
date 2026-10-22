@@ -12,7 +12,7 @@
     "setupPriceId": null,
     "setupLink": null,
     "minutes": "30",
-    "availability": "Tue/Thu 11:00–12:30 America/New_York",
+    "availability": "Tue/Thu 11:00\u201312:30 America/New_York",
     "branch": "design",
     "capacity": "websites"
   },
@@ -29,7 +29,7 @@
     "setupPriceId": null,
     "setupLink": null,
     "minutes": "30",
-    "availability": "Tue/Thu 11:00–12:30 America/New_York",
+    "availability": "Tue/Thu 11:00\u201312:30 America/New_York",
     "branch": "design",
     "capacity": "websites"
   },
@@ -46,7 +46,7 @@
     "setupPriceId": null,
     "setupLink": null,
     "minutes": "30",
-    "availability": "Tue/Thu 11:00–12:30 America/New_York",
+    "availability": "Tue/Thu 11:00\u201312:30 America/New_York",
     "branch": "design",
     "capacity": "websites"
   },
@@ -114,7 +114,7 @@
     "setupPriceId": null,
     "setupLink": null,
     "minutes": "30",
-    "availability": "Tue/Thu 11:00–12:30 America/New_York",
+    "availability": "Tue/Thu 11:00\u201312:30 America/New_York",
     "branch": "design",
     "capacity": null
   },
@@ -148,7 +148,7 @@
     "setupPriceId": null,
     "setupLink": null,
     "minutes": "60",
-    "availability": "Wed/Fri 16:00–18:00 America/New_York",
+    "availability": "Wed/Fri 16:00\u201318:00 America/New_York",
     "branch": "media",
     "capacity": null
   },
@@ -165,9 +165,10 @@
     "setupPriceId": "price_1UIPPJR3m5Mdthc70y5BUg0e",
     "setupLink": "https://buy.stripe.com/test_9B614pbjffrP6fL92K63K01",
     "minutes": "30",
-    "availability": "Tue/Thu 11:00–12:30 America/New_York",
+    "availability": "Tue/Thu 11:00\u201312:30 America/New_York",
     "branch": "systems",
-    "capacity": "receptionist"
+    "capacity": "receptionist",
+    "recurringPaymentLink": "https://buy.stripe.com/test_cNi4gB1IFfrP0Vr7YG63K00"
   },
   {
     "id": "prod_VJ1PfCK3nMWXTE",
@@ -182,7 +183,7 @@
     "setupPriceId": null,
     "setupLink": null,
     "minutes": "30",
-    "availability": "Tue/Thu 11:00–12:30 America/New_York",
+    "availability": "Tue/Thu 11:00\u201312:30 America/New_York",
     "branch": "systems",
     "capacity": null
   },
@@ -199,7 +200,7 @@
     "setupPriceId": null,
     "setupLink": null,
     "minutes": "30",
-    "availability": "Tue/Thu 11:00–12:30 America/New_York",
+    "availability": "Tue/Thu 11:00\u201312:30 America/New_York",
     "branch": "systems",
     "capacity": "automation"
   },
@@ -216,13 +217,13 @@
     "setupPriceId": null,
     "setupLink": null,
     "minutes": "120",
-    "availability": "Tue/Thu 19:00–21:00 America/New_York",
+    "availability": "Tue/Thu 19:00\u201321:00 America/New_York",
     "branch": "music",
     "capacity": null
   },
   {
     "id": "prod_VJ1PfSiyyPiLgF",
-    "name": "Mix + Master — Single Song",
+    "name": "Mix + Master \u2014 Single Song",
     "category": "Music",
     "price": "$75 / song",
     "terms": "Full payment upfront",
@@ -267,7 +268,7 @@
     "setupPriceId": null,
     "setupLink": null,
     "minutes": "30",
-    "availability": "Tue/Thu 11:00–12:30 America/New_York",
+    "availability": "Tue/Thu 11:00\u201312:30 America/New_York",
     "branch": "music",
     "capacity": null
   },
@@ -301,7 +302,7 @@
     "setupPriceId": null,
     "setupLink": null,
     "minutes": "60",
-    "availability": "Tue/Thu 15:30–17:30 America/New_York",
+    "availability": "Tue/Thu 15:30\u201317:30 America/New_York",
     "branch": "education",
     "capacity": null
   },
@@ -318,7 +319,7 @@
     "setupPriceId": null,
     "setupLink": null,
     "minutes": "30",
-    "availability": "Tue/Thu 11:00–12:30 America/New_York",
+    "availability": "Tue/Thu 11:00\u201312:30 America/New_York",
     "branch": "education",
     "capacity": null
   }
