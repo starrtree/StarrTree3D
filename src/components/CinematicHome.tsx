@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type CSSProperties } from 'react';
+import { createPortal } from 'react-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { worlds, type World } from '../data/content';
@@ -8,6 +9,8 @@ import { cinema } from '../data/cinema';
 import { useExperience } from './Experience';
 export default function CinematicHome({ onAbout, active, introPlaying = false }: { onAbout: () => void; active: boolean; introPlaying?: boolean }) {
   const [selected, setSelected] = useState<World | null>(null);
+  const [launch, setLaunch] = useState({ x: 50, y: 50, size: 72 });
+  const returnFocus = useRef<HTMLElement | null>(null);
   const root = useRef<HTMLElement>(null);
   const video = useRef<HTMLVideoElement>(null);
   const stage = useRef<HTMLDivElement>(null);
@@ -46,13 +49,30 @@ export default function CinematicHome({ onAbout, active, introPlaying = false }:
     observer.observe(stage.current);
     return () => observer.disconnect();
   },[mobile]);
-  const choose = (world:World) => {
+  const choose = (world:World, target?:HTMLElement) => {
+    returnFocus.current = target || null;
+    const rect = target?.querySelector('img')?.getBoundingClientRect() || target?.getBoundingClientRect();
+    if (rect) setLaunch({ x: rect.left + rect.width / 2, y: rect.top + rect.height / 2, size: rect.width });
     setSelected(world);
-    if (!motion || !root.current) return;
-    const images = root.current.querySelectorAll('.chakra-planet img');
-    gsap.killTweensOf(images);
-    gsap.fromTo(images,{rotation:0,rotationY:0,scale:1},{rotation:360,rotationY:20,scale:1.08,duration:1.15,stagger:.045,ease:'power3.out',onComplete:() => { gsap.to(images,{rotationY:0,scale:1,duration:.3}); }});
   };
+  const close = () => { setSelected(null); requestAnimationFrame(() => returnFocus.current?.focus()); };
+  useEffect(() => {
+    if (!selected) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const onKey = (event:KeyboardEvent) => {
+      if (event.key === 'Escape') close();
+      if (event.key === 'Tab') {
+        const link = document.querySelector<HTMLElement>('.branch-expansion-content a');
+        const exit = document.querySelector<HTMLElement>('.branch-expansion-close');
+        if (!link || !exit) return;
+        if (event.shiftKey && document.activeElement === link) { event.preventDefault(); exit.focus(); }
+        else if (!event.shiftKey && document.activeElement === exit) { event.preventDefault(); link.focus(); }
+      }
+    };
+    document.addEventListener('keydown', onKey);
+    return () => { document.body.style.overflow = previous; document.removeEventListener('keydown', onKey); };
+  }, [selected]);
   useEffect(() => {
     if (!active || !motion || introPlaying || mobile || videoFailed) { video.current?.pause(); return; }
     const observer = new IntersectionObserver(([entry]) => {
@@ -80,7 +100,7 @@ export default function CinematicHome({ onAbout, active, introPlaying = false }:
       {motion && !mobile && !videoFailed && <video className="home-loop" ref={video} src={cinema.homeVideo} muted playsInline loop preload="auto" onPlaying={() => setVideoPlaying(true)} onError={() => setVideoFailed(true)} aria-hidden="true" style={{opacity:useFilm ? 1 : 0}} />}
       {worlds.map(world => {
         const planet = planets[world.id], [x,y,size] = mobile ? planet.mobile : useFilm ? planet.film : planet.desktop;
-        return <button key={world.id} className={`chakra-planet ${selected?.id===world.id ? 'is-selected' : ''}`} style={{left:`${x}%`,top:`${y}%`,width:`${size}%`,'--world':world.color} as CSSProperties} onClick={() => choose(world)} aria-label={`Explore ${world.title}`} aria-pressed={selected?.id===world.id} aria-controls="selected-world"><img src={planet.src} alt="" width="512" height="512" /><span>{world.title}</span></button>;
+        return <button key={world.id} className={`chakra-planet ${selected?.id===world.id ? 'is-selected' : ''}`} style={{left:`${x}%`,top:`${y}%`,width:`${size}%`,'--world':world.color} as CSSProperties} onClick={(event) => choose(world,event.currentTarget)} aria-label={`Explore ${world.title}`} aria-pressed={selected?.id===world.id} aria-controls="selected-world"><img src={planet.src} alt="" width="512" height="512" /><span>{world.title}</span></button>;
       })}
       </div></div>
       <div id="intro-film-host" />
@@ -90,10 +110,15 @@ export default function CinematicHome({ onAbout, active, introPlaying = false }:
       <div className="universe-title"><p className="cinema-eyebrow">ROOTED ON EARTH. REACHING FOR THE STARS.</p><h1>STARRTREE</h1><p>A Light that Grows through its Darkness.<br className="mobile-only" /> A Life that Shines through its Branches.</p></div>
       <div className="universe-bottom"><span>SEVEN WORLDS. ONE LIVING ROOT.</span><a href="#/services">WORK WITH MAX <span>↗</span></a></div>
     </section>
-    <nav className="planet-legend" aria-label="Seven branches">{worlds.map(world=><button key={world.id} onClick={()=>choose(world)} aria-pressed={selected?.id===world.id} style={{'--world':world.color} as CSSProperties}><img src={planets[world.id].src} alt="" width="48" height="48" /><span><small>BRANCH {world.number}</small>{world.title}</span><b>↗</b></button>)}</nav>
-    <section id="selected-world" className={`world-selection ${selected ? 'has-selection' : ''}`} style={{ '--world': selected?.color || '#dabb80' } as CSSProperties} aria-live="polite">
-      {selected ? <><img src={planets[selected.id].src} alt="" /><div><p className="cinema-eyebrow">BRANCH {selected.number} · {selected.frequency} HZ / SYMBOLIC</p><h2>{selected.title}</h2><p>{selected.short}</p></div><a className="st-primary" href={`#/world/${selected.id}`}>Enter this branch <span>→</span></a><button className="selection-close" onClick={() => setSelected(null)} aria-label="Close world selection">×</button></> : <><div><p className="cinema-eyebrow">FOLLOW YOUR CURIOSITY</p><h2>Choose a world. <em>See what grows.</em></h2></div><a href="#/items" className="st-secondary">Or find something directly ↗</a></>}
+    <nav className="planet-legend" aria-label="Seven branches">{worlds.map(world=><button key={world.id} onClick={(event)=>choose(world,event.currentTarget)} aria-pressed={selected?.id===world.id} style={{'--world':world.color} as CSSProperties}><img src={planets[world.id].src} alt="" width="48" height="48" /><span><small>BRANCH {world.number}</small>{world.title}</span><b>↗</b></button>)}</nav>
+    <section id="selected-world" className="world-selection"><div><p className="cinema-eyebrow">FOLLOW YOUR CURIOSITY</p><h2>Choose a world. <em>See what grows.</em></h2></div><a href="#/items" className="st-secondary">Or find something directly ↗</a>
     </section>
+    {selected && createPortal(<div className={`branch-expansion branch-expansion-${selected.id} ${motion ? '' : 'motion-paused'}`} role="dialog" aria-modal="true" aria-labelledby="expanded-branch-title" style={{'--world':selected.color,'--launch-x':`${launch.x}px`,'--launch-y':`${launch.y}px`,'--launch-size':`${launch.size}px`} as CSSProperties}>
+      <button className="branch-expansion-shade" onClick={close} aria-label="Close expanded branch" />
+      <div className="branch-expansion-scene" aria-hidden="true"><img className="branch-expansion-tree" src={`/branches/${selected.id}.webp`} alt="" /><img className="branch-expansion-planet" src={planets[selected.id].src} alt="" /></div>
+      <div className="branch-expansion-content"><p className="cinema-eyebrow">BRANCH {selected.number} · {selected.chakra.toUpperCase()}</p><h2 id="expanded-branch-title">{selected.title}</h2><p>{selected.short}</p><a className="st-primary" href={`#/world/${selected.id}`}>Enter this branch <span>→</span></a></div>
+      <button className="branch-expansion-close" onClick={close} aria-label="Close expanded branch" autoFocus>×</button>
+    </div>,document.body)}
     <ScrollJourney />
     <section ref={origin} id="after-journey" tabIndex={-1} className="origin-interlude"><picture><source media="(max-width:700px)" srcSet={cinema.originMobile}/><img src={cinema.originDesktop} alt="StarrX, rooted in a universe of possibility" loading="lazy" /></picture><div><p className="cinema-eyebrow">THE HUMAN AT THE CENTER</p><h2>Many branches.<br /><em>One imagination.</em></h2><button className="st-primary" onClick={onAbout}>Meet Max Starr ↗</button></div></section>
     <section className="studio-teaser">
