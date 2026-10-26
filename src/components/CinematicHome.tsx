@@ -92,24 +92,24 @@ export default function CinematicHome({ onAbout, active, introPlaying = false }:
     return () => { observer.disconnect(); document.removeEventListener('visibilitychange', visibility); video.current?.pause(); };
   }, [active, motion, introPlaying, mobile, videoFailed]);
   useEffect(() => {
-    if (!active || !motion || introPlaying) return;
+    if (!active || !motion) return;
     const context = gsap.context(() => {
       gsap.from('.universe-title', { opacity: 0, y: 24, duration: 1.5, delay: 0.3 });
     }, root);
     return () => context.revert();
   }, [active, motion, introPlaying]);
-  const useFilm = motion && !mobile && !videoFailed && videoPlaying;
+  const useFilm = introPlaying || (motion && !mobile && !videoFailed && videoPlaying);
   return <>
-    <section ref={root} className={`universe chakra-home ${active && !introPlaying ? 'planets-live' : ''} ${motion ? '' : 'motion-paused'}`} aria-label="Explore the StarrTree universe">
+    <section ref={root} className={`universe chakra-home ${active ? 'planets-live' : ''} ${motion ? '' : 'motion-paused'}`} aria-label="Explore the StarrTree universe">
       <div ref={stage} className="home-stage"><div className="home-art-plane" style={{width:artSize.width,height:artSize.height}}>
       <picture className="home-planet-backdrop"><source media="(max-width: 700px)" srcSet={cinema.mobilePoster} /><img src={cinema.homePoster} alt="StarrX radiates golden light beneath seven luminous worlds" /></picture>
       {motion && !mobile && !videoFailed && <video className="home-loop" ref={video} src={cinema.homeVideo} muted playsInline loop preload="auto" onPlaying={() => setVideoPlaying(true)} onError={() => setVideoFailed(true)} aria-hidden="true" style={{opacity:useFilm ? 1 : 0}} />}
+      <div id="intro-film-host" />
       {worlds.map(world => {
         const planet = planets[world.id], [x,y,size] = mobile ? planet.mobile : useFilm ? planet.film : planet.desktop;
         return <button key={world.id} className={`chakra-planet ${selected?.id===world.id ? 'is-selected' : ''}`} style={{left:`${x}%`,top:`${y}%`,width:`${size}%`,'--world':world.color,'--birth-delay':`${ignitionOrder.indexOf(world.id) * 110}ms`} as CSSProperties} onClick={(event) => choose(world,event.currentTarget)} aria-label={`Explore ${world.title}`} aria-pressed={selected?.id===world.id} aria-controls="selected-world"><i className="planet-ignition" aria-hidden="true">{ignitionParticles.map((style,index)=><b key={index} style={style} />)}</i><img src={planet.src} alt="" width="512" height="512" loading="eager" decoding="async" /><span>{world.title}</span></button>;
       })}
       </div></div>
-      <div id="intro-film-host" />
       <div className="universe-shade" />
       <div className="universe-coordinate">MAX STARR <span>ENGINEER · ARTIST · EDUCATOR</span></div>
       <button className="human-at-center" onClick={onAbout}><span>STARRX</span><small>THE HUMAN AT THE CENTER ↗</small></button>

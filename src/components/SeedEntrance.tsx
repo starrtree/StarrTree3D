@@ -1,61 +1,61 @@
 import { useEffect, useRef, useState } from 'react';
-import gsap from 'gsap';
 import { createPortal } from 'react-dom';
 import { cinema } from '../data/cinema';
 import { useExperience } from './Experience';
 
+type Stage = 'seed' | 'grow' | 'flight';
 export default function SeedEntrance({ onComplete, onReveal }: { onComplete: () => void; onReveal: () => void }) {
-  const [stage, setStage] = useState<'seed' | 'spark' | 'flight'>('seed');
+  const [stage, setStage] = useState<Stage>('seed');
   const [revealed, setRevealed] = useState(false);
   const [playing, setPlaying] = useState(false);
+  const [wash, setWash] = useState(0);
   const [needsGesture, setNeedsGesture] = useState(false);
+  // Keep one orientation for this playthrough, even if the phone rotates.
+  const [mobile] = useState(() => matchMedia('(max-width:700px)').matches);
   const dialog = useRef<HTMLDialogElement>(null);
-  const symbol = useRef<HTMLImageElement>(null);
-  const flood = useRef<HTMLDivElement>(null);
+  const growth = useRef<HTMLVideoElement>(null);
   const video = useRef<HTMLVideoElement>(null);
   const finished = useRef(false);
   const hasRevealed = useRef(false);
-  const { playIntro, completeIntro, stopSound, primeAudio, effect, motion } = useExperience();
+  const { startSound, primeAudio, effect, motion } = useExperience();
   const reveal = () => {
     if (hasRevealed.current) return;
     hasRevealed.current = true;
     setRevealed(true);
-    effect("arrival");
+    effect('arrival');
     onReveal();
   };
   const finish = () => {
     if (finished.current) return;
     finished.current = true;
-    completeIntro(video.current?.currentTime || 0);
+    growth.current?.pause();
+    video.current?.pause();
     reveal();
     onComplete();
   };
+  const enterFlight = () => { setPlaying(false); setStage('flight'); };
   const play = () => {
-    const film = video.current;
+    const film = stage === 'grow' ? growth.current : video.current;
     if (!film) return;
     setNeedsGesture(false);
-    void playIntro(film).catch(() => { if (!finished.current) setNeedsGesture(true); });
+    void film.play().catch(() => { if (!finished.current) setNeedsGesture(true); });
   };
   useEffect(() => {
-    dialog.current?.showModal();
-    dialog.current?.querySelector<HTMLButtonElement>('button')?.focus();
-    return () => dialog.current?.close();
+    const modal = dialog.current;
+    modal?.showModal();
+    modal?.querySelector<HTMLButtonElement>('button')?.focus();
+    return () => modal?.close();
   }, []);
   useEffect(() => {
-    if (stage !== 'spark') return;
-    const animation = gsap.timeline({ onComplete: () => setStage('flight') });
-    animation.to(symbol.current, { scale: 1.65, filter: 'drop-shadow(0 0 70px #fff5c8) brightness(3)', duration: 1.1, ease: 'power2.in' })
-      .to(flood.current, { opacity: 1, duration: 0.55 }, 0.65);
-    return () => { animation.kill(); };
-  }, [stage]);
-  useEffect(() => {
-    if (stage !== 'flight') return;
+    if (stage === 'seed') return;
     dialog.current?.close();
-    const film = video.current;
     play();
+    const film = stage === 'grow' ? growth.current : video.current;
+    if (film?.error) { if (stage === 'grow') enterFlight(); else finish(); return; }
     let frame = 0;
+    // Media time, rather than wall-clock time, handles buffering and seeking.
     const tick = () => {
-      if (film && film.currentTime >= cinema.homeRevealSeconds) reveal();
+      if (stage === 'flight' && film && film.currentTime >= cinema.homeRevealSeconds) { reveal(); return; }
       frame = requestAnimationFrame(tick);
     };
     frame = requestAnimationFrame(tick);
@@ -67,27 +67,22 @@ export default function SeedEntrance({ onComplete, onReveal }: { onComplete: () 
   }, [stage]);
   useEffect(() => { if (!motion && stage !== 'seed') finish(); }, [motion]);
   const begin = () => {
-    stopSound();
     primeAudio();
+    startSound();
     if (!motion) { finish(); return; }
-    setStage('spark');
+    setStage('grow');
   };
   return <>
-    {stage === 'flight' && createPortal(<div className={`intro-film-layer ${revealed ? 'is-revealed' : ''}`}>
-      <video ref={video} className="entrance-film" src={cinema.introVideo} poster={cinema.flightPoster} playsInline preload="auto" onPlaying={() => setPlaying(true)} onEnded={finish} onError={finish} />
-      <div className={`film-white-fade ${playing ? 'has-played' : ''}`} aria-hidden="true" />
-      {needsGesture && <div className="film-retry"><button onClick={play}>Play film with sound →</button><button onClick={finish}>Skip film</button></div>}
-      {!revealed && !needsGesture && <button className="skip-film" onClick={finish}>Skip film →</button>}
+    {createPortal(<div className={`intro-film-layer stage-${stage} ${revealed ? 'is-revealed' : ''}`} style={{ visibility: stage === 'seed' ? 'hidden' : undefined }}>
+      <video ref={growth} className={`entrance-film seed-growth-film ${stage === 'grow' ? 'is-current' : ''}`} src={mobile ? cinema.seedGrowMobile : cinema.seedGrowDesktop} muted playsInline preload="auto" onTimeUpdate={event => { const film = event.currentTarget; if (Number.isFinite(film.duration)) setWash(Math.min(1,Math.max(0,(film.currentTime - film.duration + .6) / .6))); }} onEnded={enterFlight} onError={() => { if (stage === 'grow') enterFlight(); }} />
+      <video ref={video} className={`entrance-film starrx-flight-film ${stage === 'flight' ? 'is-current' : ''}`} src={cinema.introVideo} poster={cinema.flightPoster} muted playsInline preload="auto" onPlaying={() => setPlaying(true)} onTimeUpdate={() => { if (video.current && video.current.currentTime >= cinema.homeRevealSeconds) reveal(); }} onEnded={finish} onError={() => { if (stage === 'flight') finish(); }} />
+      {stage === 'grow' && <div className="seed-to-starrx-light" style={{ opacity: wash }} aria-hidden="true" />}
+      {stage === 'flight' && <><div className={`film-white-fade ${playing ? 'has-played' : ''}`} aria-hidden="true" />{!revealed && <h1 className="intro-wordmark">STARRTREE</h1>}</>}
+      {needsGesture && <div className="film-retry"><button onClick={play}>Continue film →</button><button onClick={finish}>Skip film</button></div>}
     </div>, document.getElementById('intro-film-host') || document.body)}
-    <dialog ref={dialog} className={`seed-entrance stage-${stage}`} aria-label="Collect the StarrSeed" onCancel={e => { e.preventDefault(); finish(); }}>
-      <div className="seed-content">
-        <button className="seed-collect" onClick={begin} disabled={stage === 'spark'} aria-label="Collect the StarrSeed and play the entrance film with sound">
-          <span className="seed-aura" aria-hidden="true" />
-          <img ref={symbol} src={cinema.seed} alt="" style={{ maskImage: `url(${cinema.seed})`, maskMode: 'luminance', maskSize: 'contain', maskRepeat: 'no-repeat', maskPosition: 'center' }} />
-          <span>Collect the StarrSeed <span aria-hidden="true">↗</span></span>
-        </button>
-      </div>
-      <div ref={flood} className="seed-flood" aria-hidden="true" />
+    <dialog ref={dialog} className="seed-entrance" aria-label="Collect the StarrSeed" onCancel={event => { event.preventDefault(); finish(); }}>
+      <video className="seed-draw-film" src={mobile ? cinema.seedDrawMobile : cinema.seedDrawDesktop} autoPlay={motion} muted playsInline preload="auto" onLoadedMetadata={event => { if (!motion) event.currentTarget.currentTime = Math.max(0,event.currentTarget.duration - .1); }} />
+      <button className="seed-collect seed-video-collect" onClick={begin} aria-label="Collect the StarrSeed and enter StarrTree"><span>Collect the StarrSeed ↗</span></button>
     </dialog>
   </>;
 }

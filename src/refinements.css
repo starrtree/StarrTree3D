@@ -69,8 +69,8 @@ html,body,#root{width:100%;max-width:100%;overflow-x:clip}
 
 /* Branches are rooted at StarrX in the middle, then grow toward the chosen fruit. */
 .branch-expansion{--branch-angle:50deg;--planet-x:25%;--planet-y:19%;position:fixed;inset:0;z-index:150;isolation:isolate;display:grid;place-items:center;overflow:hidden;color:#fff7eb}
-.branch-expansion-web{--branch-angle:40deg;--planet-x:18%}
-.branch-expansion-art{--branch-angle:140deg;--planet-x:82%}
+.branch-expansion-web{--branch-angle:-18deg;--planet-x:14%;--planet-y:60%}
+.branch-expansion-art{--branch-angle:198deg;--planet-x:86%;--planet-y:60%}
 .branch-expansion-ai{--branch-angle:50deg;--planet-x:25%}
 .branch-expansion-education{--branch-angle:130deg;--planet-x:75%}
 .branch-expansion-music{--branch-angle:60deg;--planet-x:32%}
@@ -96,7 +96,7 @@ html,body,#root{width:100%;max-width:100%;overflow-x:clip}
 .branch-expansion.motion-paused .branch-expansion-tree{animation:none;clip-path:none}
 .branch-expansion.motion-paused .branch-expansion-planet,.branch-expansion.motion-paused .branch-expansion-content,.branch-expansion.motion-paused .branch-expansion-shade{animation:none}
 
-/* One clockwise ignition sequence, only after the entrance film has finished. */
+/* Clockwise ignition begins at the intro media-time reveal. */
 .chakra-home:not(.planets-live) .chakra-planet{visibility:hidden;pointer-events:none}
 .planet-ignition{position:absolute;inset:0;pointer-events:none;border-radius:50%;z-index:2}
 .planet-ignition::before{content:'';position:absolute;inset:16%;border-radius:50%;background:radial-gradient(circle,#fff 0 18%,#fff9df 30%,var(--world) 48%,transparent 72%);box-shadow:0 0 22px #fff,0 0 55px var(--world);opacity:0}
@@ -113,3 +113,23 @@ html,body,#root{width:100%;max-width:100%;overflow-x:clip}
 .motion-paused .planet-ignition{display:none}
 .motion-paused.planets-live .chakra-planet>img{animation:none}
 @media(prefers-reduced-motion:reduce){.planet-ignition{display:none}.planets-live .chakra-planet>img{animation:none}}
+
+@font-face{font-family:Transcorner;src:url('/fonts/transcorner.woff') format('woff');font-weight:400;font-style:normal;font-display:swap}
+.chakra-home .universe-title h1,.intro-wordmark{font-family:Transcorner,Georgia,serif;font-weight:400;letter-spacing:.04em;text-indent:.04em}
+.chakra-home .home-art-plane #intro-film-host{height:100%;z-index:1}
+.chakra-home .chakra-planet{z-index:2}
+.chakra-home .chakra-planet:hover,.chakra-home .chakra-planet:focus-visible{z-index:3}
+.intro-film-layer .entrance-film{visibility:hidden}
+.intro-film-layer .entrance-film.is-current{visibility:visible}
+.intro-film-layer.is-revealed .entrance-film{object-fit:fill}
+.intro-wordmark{position:absolute;left:0;right:0;bottom:9%;margin:0;text-align:center;font-size:clamp(40px,8vw,120px);line-height:1;color:#f8e4ad;text-shadow:0 0 30px #f4ba5e55;z-index:4}
+.seed-draw-film{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#000}
+.seed-entrance .seed-video-collect{position:absolute;inset:0;width:100%;height:100%;padding:0;display:block;background:transparent;border:0;border-radius:0;box-shadow:none}
+.seed-video-collect>span{position:absolute;bottom:12%;left:0;right:0;font:16px/1.5 Georgia,serif;letter-spacing:.08em;color:#f1d493;text-shadow:0 2px 10px #000}
+.seed-entrance .seed-video-collect:focus-visible{outline:none;border-radius:0}
+.seed-video-collect:focus-visible>span{text-decoration:underline;text-underline-offset:8px}
+.seed-to-starrx-light{position:absolute;inset:0;z-index:3;background:#fff9e9;pointer-events:none;transition:opacity .2s ease}
+.intro-pending .experience-controls{z-index:200}
+.intro-pending .experience-controls .motion-control{display:none}
+.intro-pending .st-skip,.intro-pending .st-footer,.intro-pending .planet-legend,.intro-pending .world-selection,.intro-pending .scroll-journey,.intro-pending .origin-interlude,.intro-pending .studio-teaser{visibility:hidden;pointer-events:none}
+@media(max-width:700px){.intro-film-layer.is-revealed .starrx-flight-film{object-fit:cover}.intro-wordmark{font-size:12vw;bottom:14%}.branch-expansion-web,.branch-expansion-art{--planet-y:56%}}
