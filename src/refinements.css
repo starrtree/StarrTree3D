@@ -78,7 +78,7 @@ html,body,#root{width:100%;max-width:100%;overflow-x:clip}
 .branch-expansion-wisdom{--branch-angle:90deg;--planet-x:50%;--planet-y:14%}
 .branch-expansion-shade{position:absolute;inset:0;width:100%;height:100%;border:0;background:radial-gradient(circle at 50% 55%,#130d1bda,#020207ee 75%);backdrop-filter:brightness(.28) blur(7px);cursor:default;animation:branch-shade-in .45s both}
 .branch-expansion-scene{position:absolute;inset:0;pointer-events:none}
-.branch-expansion-tree{position:absolute;right:50%;top:60%;width:min(56vw,720px);height:auto;transform-origin:100% 50%;transform:translateY(-50%) rotate(var(--branch-angle));filter:drop-shadow(0 0 12px var(--world)) drop-shadow(0 0 36px color-mix(in srgb,var(--world) 50%,transparent));clip-path:inset(0 0 0 100%);animation:branch-grow 1.05s cubic-bezier(.14,.72,.18,1) .12s both}
+.branch-expansion-tree{position:absolute;left:50%;top:50%;width:180vmax;max-width:none;height:auto;transform-origin:center;transform:translate(-50%,-50%) rotate(var(--branch-angle));mask-image:radial-gradient(ellipse at center,#000 34%,#000c 55%,transparent 74%);filter:drop-shadow(0 0 12px var(--world)) drop-shadow(0 0 36px color-mix(in srgb,var(--world) 50%,transparent));clip-path:inset(0 0 0 100%);animation:branch-grow 1.05s cubic-bezier(.14,.72,.18,1) .12s both}
 .branch-expansion-planet{position:absolute;left:var(--planet-x);top:var(--planet-y);width:clamp(150px,19vw,250px);aspect-ratio:1;object-fit:contain;transform:translate(-50%,-50%);filter:drop-shadow(0 0 22px var(--world)) drop-shadow(0 0 58px var(--world));animation:planet-expand .75s cubic-bezier(.16,.82,.2,1) both}
 .branch-expansion-content{position:relative;z-index:2;width:min(720px,86vw);margin-top:22vh;text-align:center;text-shadow:0 3px 24px #020207,0 0 24px color-mix(in srgb,var(--world) 50%,transparent);animation:branch-copy-in .65s ease .5s both}
 .branch-expansion-content .cinema-eyebrow{color:var(--world);font-size:11px}
@@ -91,7 +91,25 @@ html,body,#root{width:100%;max-width:100%;overflow-x:clip}
 @keyframes branch-grow{from{clip-path:inset(0 0 0 100%);opacity:.2}to{clip-path:inset(0 0 0 0);opacity:1}}
 @keyframes planet-expand{from{left:var(--launch-x);top:var(--launch-y);width:var(--launch-size);opacity:.5}to{left:var(--planet-x);top:var(--planet-y);opacity:1}}
 @keyframes branch-copy-in{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
-@media(max-width:700px){.branch-expansion{--planet-y:24%}.branch-expansion-wisdom{--planet-y:17%}.branch-expansion-tree{width:48vw;top:62%}.branch-expansion-planet{width:clamp(125px,35vw,180px)}.branch-expansion-content{margin-top:25vh}.branch-expansion-content h2{font-size:clamp(35px,10vw,55px)}.branch-expansion-content>p:not(.cinema-eyebrow){font-size:16px}.branch-expansion-close{right:14px;top:14px}}
+@media(max-width:700px){.branch-expansion{--planet-y:24%}.branch-expansion-wisdom{--planet-y:17%}.branch-expansion-tree{width:180vmax;top:50%}.branch-expansion-planet{width:clamp(125px,35vw,180px)}.branch-expansion-content{margin-top:25vh}.branch-expansion-content h2{font-size:clamp(35px,10vw,55px)}.branch-expansion-content>p:not(.cinema-eyebrow){font-size:16px}.branch-expansion-close{right:14px;top:14px}}
 @media(prefers-reduced-motion:reduce){.branch-expansion *, .branch-expansion *::before{animation:none!important;transition:none!important}.branch-expansion-tree{clip-path:none}}
 .branch-expansion.motion-paused .branch-expansion-tree{animation:none;clip-path:none}
 .branch-expansion.motion-paused .branch-expansion-planet,.branch-expansion.motion-paused .branch-expansion-content,.branch-expansion.motion-paused .branch-expansion-shade{animation:none}
+
+/* One clockwise ignition sequence, only after the entrance film has finished. */
+.chakra-home:not(.planets-live) .chakra-planet{visibility:hidden;pointer-events:none}
+.planet-ignition{position:absolute;inset:0;pointer-events:none;border-radius:50%;z-index:2}
+.planet-ignition::before{content:'';position:absolute;inset:16%;border-radius:50%;background:radial-gradient(circle,#fff 0 18%,#fff9df 30%,var(--world) 48%,transparent 72%);box-shadow:0 0 22px #fff,0 0 55px var(--world);opacity:0}
+.planet-ignition::after{content:'';position:absolute;inset:12%;border:1px solid #fff8;border-radius:50%;opacity:0;box-shadow:0 0 16px var(--world)}
+.planet-ignition b{position:absolute;left:50%;top:50%;width:3px;height:3px;border-radius:50%;background:#fff;box-shadow:0 0 6px #fff,0 0 12px var(--world);opacity:0}
+.planets-live .planet-ignition::before{animation:planet-ignite .95s ease-out var(--birth-delay) both}
+.planets-live .planet-ignition::after{animation:planet-halo .95s ease-out var(--birth-delay) both}
+.planets-live .planet-ignition b{animation:planet-stardust .9s ease-out var(--birth-delay) both}
+.planets-live .chakra-planet>img{animation:planet-materialize .85s cubic-bezier(.16,.8,.2,1) var(--birth-delay) backwards}
+@keyframes planet-ignite{0%{opacity:0;transform:scale(.15)}18%{opacity:1;transform:scale(.8)}38%{opacity:1;transform:scale(1.2)}100%{opacity:0;transform:scale(1.7)}}
+@keyframes planet-halo{0%{opacity:0;transform:scale(.25)}30%{opacity:.8}100%{opacity:0;transform:scale(2.25)}}
+@keyframes planet-stardust{0%,10%{opacity:0;transform:translate(-50%,-50%) scale(.2)}26%{opacity:1}100%{opacity:0;transform:translate(calc(-50% + var(--spark-x)),calc(-50% + var(--spark-y))) scale(.15)}}
+@keyframes planet-materialize{0%,18%{opacity:0;transform:scale(.55);filter:brightness(4) drop-shadow(0 0 20px #fff)}55%{opacity:1;filter:brightness(1.7) drop-shadow(0 0 24px var(--world))}100%{opacity:1;transform:scale(1);filter:drop-shadow(0 0 8px var(--world))}}
+.motion-paused .planet-ignition{display:none}
+.motion-paused.planets-live .chakra-planet>img{animation:none}
+@media(prefers-reduced-motion:reduce){.planet-ignition{display:none}.planets-live .chakra-planet>img{animation:none}}

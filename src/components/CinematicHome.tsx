@@ -7,6 +7,13 @@ import { planets } from '../data/planets';
 import ScrollJourney from './ScrollJourney';
 import { cinema } from '../data/cinema';
 import { useExperience } from './Experience';
+// Follow the actual positions around StarrX, starting at the crown.
+const ignitionOrder = ['wisdom', 'ventures', 'education', 'art', 'web', 'ai', 'music'];
+const ignitionParticles = Array.from({ length: 12 }, (_, index) => {
+  const angle = index * Math.PI / 6;
+  const radius = 42 + (index % 3) * 14;
+  return { '--spark-x': `${Math.cos(angle) * radius}px`, '--spark-y': `${Math.sin(angle) * radius}px` } as CSSProperties;
+});
 export default function CinematicHome({ onAbout, active, introPlaying = false }: { onAbout: () => void; active: boolean; introPlaying?: boolean }) {
   const [selected, setSelected] = useState<World | null>(null);
   const [launch, setLaunch] = useState({ x: 50, y: 50, size: 72 });
@@ -85,22 +92,21 @@ export default function CinematicHome({ onAbout, active, introPlaying = false }:
     return () => { observer.disconnect(); document.removeEventListener('visibilitychange', visibility); video.current?.pause(); };
   }, [active, motion, introPlaying, mobile, videoFailed]);
   useEffect(() => {
-    if (!active || !motion) return;
+    if (!active || !motion || introPlaying) return;
     const context = gsap.context(() => {
-      gsap.from('.chakra-planet', { opacity: 0, stagger: 0.08, duration: 0.9, ease: 'power2.out' });
       gsap.from('.universe-title', { opacity: 0, y: 24, duration: 1.5, delay: 0.3 });
     }, root);
     return () => context.revert();
-  }, [active, motion]);
+  }, [active, motion, introPlaying]);
   const useFilm = motion && !mobile && !videoFailed && videoPlaying;
   return <>
-    <section ref={root} className={`universe chakra-home ${motion ? '' : 'motion-paused'}`} aria-label="Explore the StarrTree universe">
+    <section ref={root} className={`universe chakra-home ${active && !introPlaying ? 'planets-live' : ''} ${motion ? '' : 'motion-paused'}`} aria-label="Explore the StarrTree universe">
       <div ref={stage} className="home-stage"><div className="home-art-plane" style={{width:artSize.width,height:artSize.height}}>
       <picture className="home-planet-backdrop"><source media="(max-width: 700px)" srcSet={cinema.mobilePoster} /><img src={cinema.homePoster} alt="StarrX radiates golden light beneath seven luminous worlds" /></picture>
       {motion && !mobile && !videoFailed && <video className="home-loop" ref={video} src={cinema.homeVideo} muted playsInline loop preload="auto" onPlaying={() => setVideoPlaying(true)} onError={() => setVideoFailed(true)} aria-hidden="true" style={{opacity:useFilm ? 1 : 0}} />}
       {worlds.map(world => {
         const planet = planets[world.id], [x,y,size] = mobile ? planet.mobile : useFilm ? planet.film : planet.desktop;
-        return <button key={world.id} className={`chakra-planet ${selected?.id===world.id ? 'is-selected' : ''}`} style={{left:`${x}%`,top:`${y}%`,width:`${size}%`,'--world':world.color} as CSSProperties} onClick={(event) => choose(world,event.currentTarget)} aria-label={`Explore ${world.title}`} aria-pressed={selected?.id===world.id} aria-controls="selected-world"><img src={planet.src} alt="" width="512" height="512" /><span>{world.title}</span></button>;
+        return <button key={world.id} className={`chakra-planet ${selected?.id===world.id ? 'is-selected' : ''}`} style={{left:`${x}%`,top:`${y}%`,width:`${size}%`,'--world':world.color,'--birth-delay':`${ignitionOrder.indexOf(world.id) * 110}ms`} as CSSProperties} onClick={(event) => choose(world,event.currentTarget)} aria-label={`Explore ${world.title}`} aria-pressed={selected?.id===world.id} aria-controls="selected-world"><i className="planet-ignition" aria-hidden="true">{ignitionParticles.map((style,index)=><b key={index} style={style} />)}</i><img src={planet.src} alt="" width="512" height="512" loading="eager" decoding="async" /><span>{world.title}</span></button>;
       })}
       </div></div>
       <div id="intro-film-host" />
