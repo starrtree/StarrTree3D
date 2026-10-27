@@ -14,10 +14,11 @@ function OpticalModel({
 }) {
   const { scene } = useGLTF(fruitAssets[id].model, `${import.meta.env.BASE_URL}draco/`);
   const group = useRef<Group>(null);
-  useFrame(({ clock, gl }) => {
+  useFrame(({ clock, gl }, delta) => {
     if (!group.current) return;
     const orbit = Number(gl.domElement.closest<HTMLElement>("[data-fruit-orbit]")?.dataset.fruitOrbit || 0);
-    group.current.rotation.y += (orbit + Math.sin(clock.elapsedTime * 0.18) * 0.22 - group.current.rotation.y) * 0.06;
+    group.current.rotation.y += Math.min(delta, .05) * .12;
+    group.current.rotation.x = Math.sin(clock.elapsedTime * .2 + orbit) * .035;
     group.current.rotation.z = Math.sin(clock.elapsedTime * 0.14) * 0.04;
     group.current.position.y = Math.sin(clock.elapsedTime * 0.6) * 0.055;
   });
@@ -87,7 +88,7 @@ export default function OpticalScene({
     <Canvas
       dpr={[1, 1.5]}
       frameloop="always"
-      camera={{ position: [0.35, 2.25, 6.5], fov: 36 }}
+      camera={{ position: [0, 0, 5.3], fov: 36 }}
       gl={{ alpha: true, antialias: true, powerPreference: "low-power" }}
       fallback={null}
       onCreated={({ gl }) => {
@@ -98,7 +99,7 @@ export default function OpticalScene({
         );
       }}
     >
-      <ambientLight intensity={0.2} />
+      <ambientLight intensity={1} />
       <directionalLight position={[3, 5, 4]} intensity={1.4} />
       <pointLight position={[-2, 1, 3]} color={color} intensity={3} />
       <Suspense fallback={null}>

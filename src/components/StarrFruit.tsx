@@ -17,6 +17,7 @@ type Props = {
   color: string;
   large?: boolean;
   staticOnly?: boolean;
+  controls?: boolean;
 };
 class VisualBoundary extends Component<
   { children: ReactNode; onFailure: () => void },
@@ -39,6 +40,7 @@ export default function StarrFruit({
   color,
   large = false,
   staticOnly = false,
+  controls = true,
 }: Props) {
   const id = (worldId in fruitAssets ? worldId : "music") as FruitWorldId;
   const [reduced, setReduced] = useState(true);
@@ -67,7 +69,7 @@ export default function StarrFruit({
         position: "relative",
         width: "100%",
         height: "100%",
-        minHeight: large ? 260 : 100,
+        minHeight: 0,
         isolation: "isolate",
       }}
     >
@@ -111,7 +113,7 @@ export default function StarrFruit({
           </VisualBoundary>
         </div>
       )}
-      {large && !staticOnly && !reduced && !failed && (
+      {controls && large && !staticOnly && !reduced && !failed && (
         <button
           className="fruit-view-toggle"
           onClick={() => setEnabled((v) => !v)}
@@ -131,7 +133,7 @@ export default function StarrFruit({
           }}
           aria-pressed={enabled}
         >
-          {enabled ? "Use still image" : "View optical 3D"}
+          {enabled ? "Use still image" : "View planet in 3D"}
         </button>
       )}
     </div>
