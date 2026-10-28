@@ -78,6 +78,7 @@ export default function SeedEntrance({ onComplete, onReveal }: { onComplete: () 
       <video ref={video} className={`entrance-film starrx-flight-film ${stage === 'flight' ? 'is-current' : ''}`} src={cinema.introVideo} poster={cinema.flightPoster} muted playsInline preload="auto" onPlaying={() => setPlaying(true)} onTimeUpdate={() => { if (video.current && video.current.currentTime >= cinema.homeRevealSeconds) reveal(); }} onEnded={finish} onError={() => { if (stage === 'flight') finish(); }} />
       {stage === 'grow' && <div className="seed-to-starrx-light" style={{ opacity: wash }} aria-hidden="true" />}
       {stage === 'flight' && <><div className={`film-white-fade ${playing ? 'has-played' : ''}`} aria-hidden="true" />{!revealed && <h1 className="intro-wordmark">STARRTREE</h1>}</>}
+      {!revealed && stage !== 'seed' && <button className="mobile-skip-intro" onClick={finish}>Skip intro →</button>}
       {needsGesture && <div className="film-retry"><button onClick={play}>Continue film →</button><button onClick={finish}>Skip film</button></div>}
     </div>, document.getElementById('intro-film-host') || document.body)}
     <dialog ref={dialog} className="seed-entrance" aria-label="Collect the StarrSeed" onCancel={event => { event.preventDefault(); finish(); }}>

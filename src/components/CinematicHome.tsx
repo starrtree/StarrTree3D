@@ -23,6 +23,7 @@ export default function CinematicHome({ onAbout, active, introPlaying = false }:
   const [selected, setSelected] = useState<World | null>(null);
   const [launch, setLaunch] = useState({ x: 50, y: 50, size: 72 });
   const returnFocus = useRef<HTMLElement | null>(null);
+  const closeControl = useRef<HTMLButtonElement>(null);
   const root = useRef<HTMLElement>(null);
   const video = useRef<HTMLVideoElement>(null);
   const stage = useRef<HTMLDivElement>(null);
@@ -70,8 +71,14 @@ export default function CinematicHome({ onAbout, active, introPlaying = false }:
   const close = () => { setSelected(null); requestAnimationFrame(() => returnFocus.current?.focus()); };
   useEffect(() => {
     if (!selected) return;
-    const previous = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
+    const scrollY = window.scrollY;
+    const body = document.body;
+    const previous = { overflow: body.style.overflow, position: body.style.position, top: body.style.top, width: body.style.width };
+    const background = document.getElementById('root');
+    const previousInert = background?.inert ?? false;
+    if (background) background.inert = true;
+    Object.assign(body.style, { overflow: 'hidden', position: 'fixed', top: `-${scrollY}px`, width: '100%' });
+    closeControl.current?.focus({ preventScroll: true });
     const onKey = (event:KeyboardEvent) => {
       if (event.key === 'Escape') close();
       if (event.key === 'Tab') {
@@ -83,7 +90,12 @@ export default function CinematicHome({ onAbout, active, introPlaying = false }:
       }
     };
     document.addEventListener('keydown', onKey);
-    return () => { document.body.style.overflow = previous; document.removeEventListener('keydown', onKey); };
+    return () => {
+      Object.assign(body.style, previous);
+      if (background) background.inert = previousInert;
+      window.scrollTo(0, scrollY);
+      document.removeEventListener('keydown', onKey);
+    };
   }, [selected]);
   useEffect(() => {
     if (!active || !motion || introPlaying || mobile || videoFailed) { video.current?.pause(); return; }
@@ -113,25 +125,25 @@ export default function CinematicHome({ onAbout, active, introPlaying = false }:
       <Starfield className="home-stars" />
       {worlds.map(world => {
         const planet = planets[world.id], [x,y,size] = mobile ? planet.mobile : useFilm ? planet.film : planet.desktop;
-        return <button key={world.id} className={`chakra-planet ${selected?.id===world.id ? 'is-selected' : ''}`} style={{left:`${x}%`,top:`${y}%`,width:`${size}%`,'--world':world.color,'--birth-delay':`${ignitionOrder.indexOf(world.id) * 110}ms`} as CSSProperties} onClick={(event) => choose(world,event.currentTarget)} aria-label={`Explore ${world.title}`} aria-pressed={selected?.id===world.id} aria-controls="selected-world"><i className="planet-ignition" aria-hidden="true">{ignitionParticles.map((style,index)=><b key={index} style={style} />)}</i><img src={planet.src} alt="" width="512" height="512" loading="eager" decoding="async" /><span>{world.title}</span></button>;
+        return <button key={world.id} className={`chakra-planet ${selected?.id===world.id ? 'is-selected' : ''}`} style={{left:`${x}%`,top:`${y}%`,width:`${size}%`,'--world':world.color,'--birth-delay':`${ignitionOrder.indexOf(world.id) * 110}ms`} as CSSProperties} onClick={(event) => choose(world,event.currentTarget)} aria-label={`Explore ${world.title}`} aria-pressed={selected?.id===world.id} aria-controls="expanded-world" aria-haspopup="dialog"><i className="planet-ignition" aria-hidden="true">{ignitionParticles.map((style,index)=><b key={index} style={style} />)}</i><img src={planet.src} alt="" width="512" height="512" loading="eager" decoding="async" /><span>{world.title}</span></button>;
       })}
       </div></div>
       <div className="universe-shade" />
       <div className="universe-coordinate">MAX STARR <span>ENGINEER · ARTIST · EDUCATOR</span></div>
       <CreatorEmblem onOpen={onAbout} />
-      <button className="home-motto motto-light" onPointerEnter={() => setTheme('light')} onPointerLeave={() => setTheme(null)} onFocus={() => setTheme('light')} onBlur={() => setTheme(null)} onClick={() => setTheme(value => value === 'light' ? null : 'light')} aria-pressed={theme === 'light'}><span>A Light</span>that Grows Through Its Darkness</button>
-      <button className="home-motto motto-life" onPointerEnter={() => setTheme('life')} onPointerLeave={() => setTheme(null)} onFocus={() => setTheme('life')} onBlur={() => setTheme(null)} onClick={() => setTheme(value => value === 'life' ? null : 'life')} aria-pressed={theme === 'life'}><span>A Life</span>That Shines Through Its Roots</button>
+      <button className="home-motto motto-light" onPointerEnter={event => { if (event.pointerType === 'mouse') setTheme('light'); }} onPointerLeave={event => { if (event.pointerType === 'mouse') setTheme(null); }} onFocus={event => { if (event.currentTarget.matches(':focus-visible')) setTheme('light'); }} onBlur={() => setTheme(null)} onClick={() => setTheme(value => value === 'light' ? null : 'light')} aria-pressed={theme === 'light'}><span>A Light</span>that Grows Through Its Darkness</button>
+      <button className="home-motto motto-life" onPointerEnter={event => { if (event.pointerType === 'mouse') setTheme('life'); }} onPointerLeave={event => { if (event.pointerType === 'mouse') setTheme(null); }} onFocus={event => { if (event.currentTarget.matches(':focus-visible')) setTheme('life'); }} onBlur={() => setTheme(null)} onClick={() => setTheme(value => value === 'life' ? null : 'life')} aria-pressed={theme === 'life'}><span>A Life</span>That Shines Through Its Roots</button>
       <div className="universe-title"><div className="living-wordmark"><h1>STARRTREE</h1><TitleBotany /><div className="title-constellation" aria-hidden="true">{Array.from({length:12},(_,i)=><i key={i} style={{left:`${3+i*8.4}%`,top:`${i%2 ? 82 : 12}%`,'--twinkle-delay':`${i*70}ms`} as CSSProperties}/>)}</div></div></div>
       <div className="universe-bottom"><a href="#/services">WORK WITH MAX <span>↗</span></a></div>
     </section>
     <nav className="planet-legend" aria-label="Seven branches">{worlds.map(world=><button key={world.id} onClick={(event)=>choose(world,event.currentTarget)} aria-pressed={selected?.id===world.id} style={{'--world':world.color} as CSSProperties}><img src={planets[world.id].src} alt="" width="48" height="48" /><span><small>BRANCH {world.number}</small>{world.title}</span><b>↗</b></button>)}</nav>
     <section id="selected-world" className="world-selection"><div><p className="cinema-eyebrow">FOLLOW YOUR CURIOSITY</p><h2>Choose a world. <em>See what grows.</em></h2></div><a href="#/items" className="st-secondary">Or find something directly ↗</a>
     </section>
-    {selected && createPortal(<div className={`branch-expansion branch-expansion-${selected.id} ${motion ? '' : 'motion-paused'}`} role="dialog" aria-modal="true" aria-labelledby="expanded-branch-title" style={{'--world':selected.color,'--launch-x':`${launch.x}px`,'--launch-y':`${launch.y}px`,'--launch-size':`${launch.size}px`} as CSSProperties}>
-      <button className="branch-expansion-shade" onClick={close} aria-label="Close expanded branch" />
+    {selected && createPortal(<div className={`branch-expansion branch-expansion-${selected.id} ${motion ? '' : 'motion-paused'}`} id="expanded-world" role="dialog" aria-modal="true" aria-labelledby="expanded-branch-title" style={{'--world':selected.color,'--launch-x':`${launch.x}px`,'--launch-y':`${launch.y}px`,'--launch-size':`${launch.size}px`} as CSSProperties}>
+      <button className="branch-expansion-shade" tabIndex={-1} onClick={close} aria-label="Close expanded branch" />
       <div className="branch-expansion-scene" aria-hidden="true"><img className="branch-expansion-tree" src={`/branches/${selected.id}.webp`} alt="" /><div className="branch-expansion-planet"><StarrFruit key={selected.id} worldId={selected.id} color={selected.color} large controls={false} /></div></div>
       <div className="branch-expansion-content"><p className="cinema-eyebrow">BRANCH {selected.number} · {selected.chakra.toUpperCase()}</p><h2 id="expanded-branch-title">{selected.title}</h2><p>{selected.short}</p><a className="st-primary" href={`#/world/${selected.id}`}>Enter this branch <span>→</span></a></div>
-      <button className="branch-expansion-close" onClick={close} aria-label="Close expanded branch" autoFocus>×</button>
+      <button ref={closeControl} className="branch-expansion-close" onClick={close} aria-label="Close expanded branch">×</button>
     </div>,document.body)}
     <ScrollJourney />
     <section ref={origin} id="after-journey" tabIndex={-1} className="origin-interlude"><picture><source media="(max-width:700px)" srcSet={cinema.originMobile}/><img src={cinema.originDesktop} alt="StarrX, rooted in a universe of possibility" loading="lazy" /></picture><div><p className="cinema-eyebrow">THE HUMAN AT THE CENTER</p><h2>Many branches.<br /><em>One imagination.</em></h2><button className="st-primary" onClick={onAbout}>Meet Max Starr ↗</button></div></section>
