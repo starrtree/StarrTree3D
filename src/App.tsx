@@ -319,6 +319,13 @@ function AppContent() {
     window.scrollTo(0, 0);
     main.current?.focus({ preventScroll: true });
   }, [route]);
+  useEffect(() => {
+    if (!intro || introRevealed) return;
+    const previous = document.body.style.overflow;
+    window.scrollTo(0, 0);
+    document.body.style.overflow = 'hidden';
+    return () => { document.body.style.overflow = previous; };
+  }, [intro, introRevealed]);
   const leaveIntro = () => {
     setIntro(false);
     requestAnimationFrame(() => main.current?.focus({ preventScroll: true }));

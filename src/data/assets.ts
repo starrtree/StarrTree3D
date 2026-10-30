@@ -5,72 +5,19 @@ export type FruitAsset = {
   model: string;
   poster: string;
   name: string;
-  source: "Blender" | "adapted inherited GLB";
+  source: "Blender" | "adapted inherited GLB" | "StarrTree chakra GLB";
   preserveMaterials?: boolean;
   format: "glb";
   bytes: number;
 };
 export const fruitAssets: Record<FruitWorldId, FruitAsset> = {
-  web: {
-    model: "/fruit/web.glb",
-    poster: "/fruit/web.png",
-    name: "Root lattice",
-    source: "Blender",
-    format: "glb",
-    bytes: 169772,
-  },
-  art: {
-    model: "/models/Meshy_AI_Cronuts_A_New_Dream_0717200127_texture-optimized_rjpxfn.glb",
-    poster: "/fruit/art-original.png",
-    name: "CRONUTS television",
-    source: "adapted inherited GLB",
-    preserveMaterials: true,
-    format: "glb",
-    bytes: 1306552,
-  },
-  ai: {
-    model: "/fruit/ai.glb",
-    poster: "/fruit/ai.png",
-    name: "Solar gyroscope",
-    source: "Blender",
-    format: "glb",
-    bytes: 169748,
-  },
-  education: {
-    model: "/models/orb-plant-bio-mv_fvbz1y.glb",
-    poster: "/fruit/education-original.png",
-    name: "Living bio-orb",
-    source: "adapted inherited GLB",
-    preserveMaterials: true,
-    format: "glb",
-    bytes: 2745956,
-  },
-  music: {
-    model: "/models/Meshy_AI_Cosmic_Arcade_Console_0717200039_texture-optimized_aexkjw.glb",
-    poster: "/fruit/music-original.png",
-    name: "Cosmic music console",
-    source: "adapted inherited GLB",
-    preserveMaterials: true,
-    format: "glb",
-    bytes: 810796,
-  },
-  ventures: {
-    model: "/models/TechRaEye_orb-optimized_navvdf.glb",
-    poster: "/fruit/ventures-original.png",
-    name: "Mechanical Eye of Ra",
-    source: "adapted inherited GLB",
-    preserveMaterials: true,
-    format: "glb",
-    bytes: 2728416,
-  },
-  wisdom: {
-    model: "/fruit/wisdom.glb",
-    poster: "/fruit/wisdom.png",
-    name: "Crown lenses",
-    source: "Blender",
-    format: "glb",
-    bytes: 244744,
-  },
+  web: {model: "/planets/models/web.glb", poster: "/planets/web.png", name: "Root chakra planet", source: "StarrTree chakra GLB", preserveMaterials: true, format: "glb", bytes: 1894384},
+  art: {model: "/planets/models/art.glb", poster: "/planets/art.png", name: "Sacral chakra planet", source: "StarrTree chakra GLB", preserveMaterials: true, format: "glb", bytes: 1750608},
+  ai: {model: "/planets/models/ai.glb", poster: "/planets/ai.png", name: "Solar Plexus chakra planet", source: "StarrTree chakra GLB", preserveMaterials: true, format: "glb", bytes: 2464144},
+  education: {model: "/planets/models/education.glb", poster: "/planets/education.png", name: "Heart chakra planet", source: "StarrTree chakra GLB", preserveMaterials: true, format: "glb", bytes: 2545532},
+  music: {model: "/planets/models/music.glb", poster: "/planets/music.png", name: "Throat chakra planet", source: "StarrTree chakra GLB", preserveMaterials: true, format: "glb", bytes: 2218700},
+  ventures: {model: "/planets/models/ventures.glb", poster: "/planets/ventures.png", name: "Third Eye chakra planet", source: "StarrTree chakra GLB", preserveMaterials: true, format: "glb", bytes: 2010448},
+  wisdom: {model: "/planets/models/wisdom.glb", poster: "/planets/wisdom.png", name: "Crown chakra planet", source: "StarrTree chakra GLB", preserveMaterials: true, format: "glb", bytes: 2682920},
 };
 export const inheritedAssets = [
   {

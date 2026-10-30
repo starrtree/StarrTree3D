@@ -1,8 +1,12 @@
 /** Public, user-supplied media. Swap paths here; never put credentials in this file. */
 export const cinema = {
   seed: '/cinema/starrseed.jpg',
+  seedDrawDesktop: '/cinema/seed/draw-desktop.mp4',
+  seedDrawMobile: '/cinema/seed/draw-mobile.mp4',
+  seedGrowDesktop: '/cinema/seed/grow-desktop.mp4',
+  seedGrowMobile: '/cinema/seed/grow-mobile.mp4',
   introVideo: '/cinema/starrtree-intro-sound.mp4',
-  homeRevealSeconds: 0.95,
+  homeRevealSeconds: 10,
   flightPoster: '/cinema/flight-poster.webp',
   homeVideo: '/cinema/home-hover.mp4',
   homePoster: '/cinema/oct22/15-Photo-15.webp',
