@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import SandboxCheckout from "../src/components/SandboxCheckout";
+import {commerceApiEnabled} from "../src/components/PaymentPage";
 import catalog from "./commerce-catalog.json";
 import { capacityStatus, testCheckout } from "./commerce-capacity";
 
@@ -13,7 +15,6 @@ function contact(service: Service, purpose: string) {
 }
 
 export function ServiceCard({ service }: { service: Service }) {
-  const [approved, setApproved] = useState(false);
   const [checkoutOpened, setCheckoutOpened] = useState(false);
   const booking = service.model.includes("manual booking");
   const deposit = service.model === "One-time deposit";
@@ -115,32 +116,12 @@ export function ServiceCard({ service }: { service: Service }) {
       )}
       {!unavailable && !discovery && link && (
         <>
-          {needsApproval && (
-            <label className="commerce-approval">
-              <input
-                type="checkbox"
-                checked={approved}
-                onChange={(event) => setApproved(event.target.checked)}
-              />
-              {subscription
-                ? "StarrTree has approved my site for care."
-                : "StarrTree has confirmed my scope and availability / project capacity."}
-            </label>
-          )}
-          {needsApproval && !approved ? (
-            <button className="commerce-action" type="button" disabled>
-              {cta} · confirmation needed
-            </button>
+          {needsApproval ? (
+            <p className="commerce-notice">An invitation issued by StarrTree is required after scope, eligibility and availability review. Contact StarrTree above; checking a box does not authorize a purchase.</p>
+          ) : commerceApiEnabled ? (
+            <SandboxCheckout serviceId={service.id} presetRequired={service.name === "BandLab Vocal Preset"}/>
           ) : (
-            <a
-              className="commerce-action"
-              href={link}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => setCheckoutOpened(true)}
-            >
-              {cta} · Test Checkout ↗
-            </a>
+            <a className="commerce-action" href={link} target="_blank" rel="noopener noreferrer" onClick={() => setCheckoutOpened(true)}>Buy · Test Checkout ↗</a>
           )}
           <p className="commerce-next">
             After checkout: keep the Stripe confirmation and contact StarrTree

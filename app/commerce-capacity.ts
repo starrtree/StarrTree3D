@@ -1,13 +1,14 @@
-// Counts from Master X Tracker, reviewed 2026-09-30: THICKER is the active website.
+// Historical counts were last reviewed 2026-09-30; they are now unconfirmed.
+// Review the canonical X tracker before setting current counts.
 // Operator-managed capacity, not calendar availability. null means unconfirmed.
 // Update only after reviewing active projects; never infer zero from missing data.
 export const projectCapacity: Record<
   string,
   { active: number | null; limit: number }
 > = {
-  websites: { active: 1, limit: 3 },
-  automation: { active: 0, limit: 1 },
-  receptionist: { active: 0, limit: 1 },
+  websites: { active: null, limit: 3 },
+  automation: { active: null, limit: 1 },
+  receptionist: { active: null, limit: 1 },
 };
 
 export function capacityStatus(group: string | null) {

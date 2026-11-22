@@ -1,3 +1,4 @@
+import PaymentPage from "./components/PaymentPage";
 import {
   useEffect,
   useRef,
@@ -528,4 +529,8 @@ function AppContent() {
     </div>
   );
 }
-export default function App() { return <ExperienceProvider><AppContent /></ExperienceProvider>; }
+export default function App() {
+ const [hash,setHash]=useState(location.hash);
+ useEffect(()=>{const update=()=>setHash(location.hash);addEventListener('hashchange',update);return()=>removeEventListener('hashchange',update);},[]);
+ return hash.startsWith('#/pay?') || hash.startsWith('#payment=') ? <PaymentPage key={hash}/> : <ExperienceProvider><AppContent /></ExperienceProvider>;
+}

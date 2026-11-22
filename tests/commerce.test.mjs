@@ -11,7 +11,7 @@ import { renderToStaticMarkup } from 'react-dom/server';
 const require = createRequire(import.meta.url);
 const temporary = mkdtempSync(join(tmpdir(), 'starrtree-commerce-'));
 const output = join(temporary, 'catalog.cjs');
-buildSync({ entryPoints: ['app/CommerceCatalog.tsx'], outfile: output, bundle: true, platform: 'node', format: 'cjs', jsx: 'automatic', alias: { react: require.resolve('react'), 'react/jsx-runtime': require.resolve('react/jsx-runtime') }, external: [require.resolve('react'), require.resolve('react/jsx-runtime')] });
+buildSync({ entryPoints: ['app/CommerceCatalog.tsx'], outfile: output, bundle: true, platform: 'node', format: 'cjs', define: {'import.meta.env.VITE_COMMERCE_API_ENABLED':'"false"'}, jsx: 'automatic', alias: { react: require.resolve('react'), 'react/jsx-runtime': require.resolve('react/jsx-runtime') }, external: [require.resolve('react'), require.resolve('react/jsx-runtime')] });
 const Catalog = require(output).default;
 const html = renderToStaticMarkup(React.createElement(Catalog));
 rmSync(temporary, { recursive: true });
@@ -33,7 +33,7 @@ test('B: assistant deposit retains $250 deposit / $500 starting distinction and 
   assert.equal(item.price, '$500 starting');
   assert.match(item.terms, /\$250 deposit/);
   assert.match(card(item), /Deposit only/);
-  assert.match(card(item), /Pay Deposit · confirmation needed/);
+  assert.match(card(item), /An invitation issued by StarrTree is required/);
   assert.ok(!card(item).includes(`href="${item.paymentLink}"`));
 });
 test('C: care uses the existing monthly checkout and site-eligibility acknowledgment', () => {
@@ -41,15 +41,15 @@ test('C: care uses the existing monthly checkout and site-eligibility acknowledg
   assert.equal(item.price, '$99 / month');
   assert.equal(item.model, 'Recurring monthly');
   assert.equal(item.paymentLink, 'https://buy.stripe.com/test_8x2bJ34UR0wVaw1dj063K05');
-  assert.match(card(item), /Subscribe · confirmation needed/);
-  assert.match(card(item), /approved my site for care/);
+  assert.match(card(item), /An invitation issued by StarrTree is required/);
+  assert.match(card(item), /eligibility and availability review/);
 });
 test('D: consultation preserves the exact $150 test checkout and manual calendar invitation', () => {
   const item = find('AI / Creative Tech Consultation');
   assert.equal(item.paymentLink, 'https://buy.stripe.com/test_4gMaEZafb0wVfQldj063K0i');
   assert.equal(item.price, '$150 / hour');
   assert.equal(item.minutes, '60');
-  assert.match(card(item), /Book Consultation · confirmation needed/);
+  assert.match(card(item), /An invitation issued by StarrTree is required/);
   assert.match(card(item), /After payment verification/);
   assert.match(card(item), /Payment alone does not reserve a slot/);
   assert.ok(!html.includes('calendar.google.com'));
