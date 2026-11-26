@@ -338,3 +338,39 @@ html,body,#root{width:100%;max-width:100%;overflow-x:clip}
   font: 14px/1.5 system-ui, sans-serif;
   user-select: all;
 }
+
+.world-atlas { grid-template-columns: repeat(8,minmax(0,1fr)); }
+.world-atlas button,.world-atlas .atlas-index {
+  position: relative; isolation: isolate; overflow: hidden; display: flex;
+  align-items: center; justify-content: flex-end; flex-direction: column; gap: 8px;
+  padding: 14px 6px; min-height: 132px; text-align: center; color: #fff1db;
+  background: #0a0910; font: 500 13px/1.25 system-ui,sans-serif;
+}
+.world-atlas button:last-of-type { grid-column: auto; }
+.world-atlas img.atlas-planet { width: 52px; height: 52px; object-fit: contain; }
+.world-atlas img.atlas-branch {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  opacity: .26; z-index: -1; mask-image: linear-gradient(black 48%,transparent);
+}
+.world-atlas button:hover,.world-atlas button:focus-visible { box-shadow: inset 0 -2px var(--world); }
+.atlas-grid-icon { width: 34px; height: 34px; margin: 9px; background: conic-gradient(from 90deg at 42% 42%, transparent 75%,#dbc48d 0) 0 0 / 12px 12px; }
+.journey-caption { position: absolute; left: 7%; bottom: 15%; color: #fff2da; text-shadow: 0 2px 16px #000; }
+.journey-caption h2 { margin: 0 0 12px; font: 400 clamp(36px,5vw,76px)/1 Georgia,serif; }
+.journey-progress { display: block; width: 152px; height: 3px; background: #fff5; }
+.journey-progress i { display: block; height: 100%; background: #f8d08b; transform-origin: left; transform: scaleX(var(--film-progress,0)); }
+.journey-caption small { display: block; margin-top: 7px; font-size: 13px; }
+.journey-caption nav,.studio-portals { display: flex; gap: 12px; flex-wrap: wrap; }
+.journey-caption a { display: inline-flex; align-items: center; min-height: 44px; text-decoration: underline; }
+.studio-cover,.studio-cover img { position: absolute; inset: 0; width: 100%; height: 100%; z-index: -2; object-fit: cover; }
+.studio-portals a { display: grid; gap: 6px; font-size: 14px; color: #ffebc7; }
+.studio-portals img { width: clamp(85px,11vw,144px); aspect-ratio: 1; object-fit: cover; border: 1px solid #c8a57286; }
+@media(max-width:1100px) { .world-atlas { grid-template-columns: repeat(4,minmax(0,1fr)); } }
+@media(max-width:700px) {
+  .world-atlas { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .world-atlas button,.world-atlas .atlas-index { min-height: 90px; padding: 9px; flex-direction: row; justify-content: flex-start; text-align:left; }
+  .world-atlas img.atlas-planet { width: 42px; height: 42px; }
+  .studio-teaser { min-height: 78svh; }
+  .studio-cover img { object-position: 50% 30%; }
+  .studio-teaser::after { background: linear-gradient(0deg,#080910 0%,#080910b5 35%,transparent 65%); }
+  .journey-caption { bottom: 20%; }
+}
