@@ -314,10 +314,12 @@ function AppContent() {
   const services = route === "/services";
   useEffect(() => {
     setItem(null);
+    setQuery("");
     setKind("All");
     setWorldFilter("All");
     window.scrollTo(0, 0);
-    main.current?.focus({ preventScroll: true });
+    const target = route === "/search" ? main.current?.querySelector<HTMLInputElement>('input[type="search"]') : main.current;
+    target?.focus({ preventScroll: true });
   }, [route]);
   useEffect(() => {
     if (!intro || introRevealed) return;
@@ -368,7 +370,7 @@ function AppContent() {
             Explore
           </a>
           <a href="#/services" aria-current={services ? "page" : undefined}>
-            Services
+            <span className="nav-services-wide">Services</span><span className="nav-services-small">Work with Max</span>
           </a>
           <a
             href="#/items"
@@ -395,20 +397,25 @@ function AppContent() {
             <a className="st-back" href="#/">
               ← Explore the worlds
             </a>
-            <p className="st-kicker">THE DIRECT PATH</p>
-            <h1>
-              {services
-                ? "Let’s make something real."
-                : route === "/search"
-                  ? "What are you looking for?"
-                  : "Everything, within reach."}
-            </h1>
-            <p>
-              {services
-                ? "Websites, creative work, AI systems and sessions. Open an offering for scope, price and next steps."
-                : "Search across services, releases, creative work and ideas taking shape."}
-            </p>
-            {services && <p className="st-test-notice">TEST MODE · Explore checkout with test details only. No real purchases or confirmed bookings.</p>}
+            {services ? (
+              <header className="services-opening">
+                <img src="/images/starrx-seed-in-hand.webp" alt="" width="960" height="540" />
+                <div>
+                  <p className="st-kicker">STARRTREE SERVICES</p>
+                  <h1>Work with Max.</h1>
+                  <p>Websites, creative production and AI tools for your next project.</p>
+                  <a className="st-primary" href="mailto:hello@starrtree.org?subject=StarrTree%20project%20inquiry">Tell Max about your project ↗</a>
+                  <span className="services-email">hello@starrtree.org</span>
+                </div>
+              </header>
+            ) : (
+              <>
+                <p className="st-kicker">THE DIRECT PATH</p>
+                <h1>{route === "/search" ? "What are you looking for?" : "Everything, within reach."}</h1>
+                <p>Search across services, releases, creative work and ideas taking shape.</p>
+              </>
+            )}
+            {services && <p className="st-test-notice"><strong>Test checkout.</strong> Browse prices and scope below. Email Max for real projects and booking requests.</p>}
             <div className="st-search-controls">
               <label>
                 Search

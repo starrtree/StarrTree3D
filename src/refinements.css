@@ -235,3 +235,142 @@ html,body,#root{width:100%;max-width:100%;overflow-x:clip}
  .branch-expansion-shade{position:fixed}
  .mobile-skip-intro{display:block;position:fixed;top:max(10px,env(safe-area-inset-top));right:max(12px,env(safe-area-inset-right));z-index:5;min-height:44px;padding:10px 16px;background:#050609c9;color:#fff2d5;border:1px solid #f0ddb46b;border-radius:24px;pointer-events:auto}
 }
+
+/* Give visitors a choice while the seed remains the focal point. */
+.seed-entrance .seed-video-collect > span {
+  bottom: max(18%, 100px);
+  font-size: clamp(20px, 3vw, 34px);
+}
+.seed-video-collect small {
+  display: block;
+  margin-top: 5px;
+  font: 14px/1.5 system-ui, sans-serif;
+  letter-spacing: normal;
+  color: #eee3cc;
+}
+.seed-shortcuts {
+  position: absolute;
+  inset-inline: 0;
+  bottom: max(4%, env(safe-area-inset-bottom));
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  pointer-events: none;
+}
+.seed-shortcuts > *, .intro-film-layer .mobile-skip-intro {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 8px 14px;
+  border: 1px solid #aa9061;
+  border-radius: 3px;
+  background: #090909ed;
+  color: #fff1d5;
+  font: 14px/1.4 system-ui, sans-serif;
+  cursor: pointer;
+  pointer-events: auto;
+}
+.intro-film-layer .mobile-skip-intro {
+  position: absolute;
+  right: max(16px, env(safe-area-inset-right));
+  top: max(16px, env(safe-area-inset-top));
+  z-index: 5;
+}
+.planet-invitation {
+  margin: 10px 0 0;
+  color: #f0dfbc;
+  text-shadow: 0 2px 5px #000;
+  font: 14px/1.5 system-ui, sans-serif;
+  letter-spacing: .03em;
+}
+.nav-services-small { display: none; }
+.services-opening {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  margin-block: 14px 16px;
+  padding: clamp(22px, 3vw, 48px);
+  border-block: 1px solid #ac88495c;
+  background: #110e11;
+}
+.services-opening img {
+  position: absolute;
+  inset: 0 0 0 auto;
+  width: 59%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 40%;
+  z-index: -2;
+}
+.services-opening::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(90deg, #110e11 34%, #110e11ed 43%, transparent 75%);
+}
+.services-opening > div { max-width: 49%; }
+.services-opening h1 { margin: 8px 0; font: 400 clamp(38px, 5vw, 76px)/1.04 Georgia, serif; color: #fff0d0; }
+.services-opening p:not(.st-kicker) { margin: 10px 0 18px; line-height: 1.5; color: #f0e9da; }
+.services-opening .st-primary { min-height: 44px; display: inline-flex; align-items: center; }
+.branch-expansion-content { isolation: isolate; }
+.branch-expansion-content::before {
+  content: '';
+  position: absolute;
+  inset: -15% -12%;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(ellipse, #09090dde 16%, #08090c9c 48%, transparent 72%);
+}
+@media (max-width: 760px) {
+  .nav-services-wide { display: none; }
+  .nav-services-small { display: inline; }
+  .services-opening { padding: 96px 18px 20px; }
+  .services-opening img { width: 100%; height: 70%; object-position: center 35%; }
+  .services-opening::before { background: linear-gradient(0deg, #110e11 25%, #110e11ea 48%, transparent 95%); }
+  .services-opening > div { max-width: 100%; }
+  .planet-invitation { font-size: 13px; }
+}
+.services-email {
+  display: block;
+  margin-top: 8px;
+  color: #ede0c6;
+  font: 14px/1.5 system-ui, sans-serif;
+  user-select: all;
+}
+
+.world-atlas { grid-template-columns: repeat(8,minmax(0,1fr)); }
+.world-atlas button,.world-atlas .atlas-index {
+  position: relative; isolation: isolate; overflow: hidden; display: flex;
+  align-items: center; justify-content: flex-end; flex-direction: column; gap: 8px;
+  padding: 14px 6px; min-height: 132px; text-align: center; color: #fff1db;
+  background: #0a0910; font: 500 13px/1.25 system-ui,sans-serif;
+}
+.world-atlas button:last-of-type { grid-column: auto; }
+.world-atlas img.atlas-planet { width: 52px; height: 52px; object-fit: contain; }
+.world-atlas img.atlas-branch {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  opacity: .26; z-index: -1; mask-image: linear-gradient(black 48%,transparent);
+}
+.world-atlas button:hover,.world-atlas button:focus-visible { box-shadow: inset 0 -2px var(--world); }
+.atlas-grid-icon { width: 34px; height: 34px; margin: 9px; background: conic-gradient(from 90deg at 42% 42%, transparent 75%,#dbc48d 0) 0 0 / 12px 12px; }
+.journey-caption { position: absolute; left: 7%; bottom: 15%; color: #fff2da; text-shadow: 0 2px 16px #000; }
+.journey-caption h2 { margin: 0 0 12px; font: 400 clamp(36px,5vw,76px)/1 Georgia,serif; }
+.journey-progress { display: block; width: 152px; height: 3px; background: #fff5; }
+.journey-progress i { display: block; height: 100%; background: #f8d08b; transform-origin: left; transform: scaleX(var(--film-progress,0)); }
+.journey-caption small { display: block; margin-top: 7px; font-size: 13px; }
+.journey-caption nav,.studio-portals { display: flex; gap: 12px; flex-wrap: wrap; }
+.journey-caption a { display: inline-flex; align-items: center; min-height: 44px; text-decoration: underline; }
+.studio-cover,.studio-cover img { position: absolute; inset: 0; width: 100%; height: 100%; z-index: -2; object-fit: cover; }
+.studio-portals a { display: grid; gap: 6px; font-size: 14px; color: #ffebc7; }
+.studio-portals img { width: clamp(85px,11vw,144px); aspect-ratio: 1; object-fit: cover; border: 1px solid #c8a57286; }
+@media(max-width:1100px) { .world-atlas { grid-template-columns: repeat(4,minmax(0,1fr)); } }
+@media(max-width:700px) {
+  .world-atlas { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .world-atlas button,.world-atlas .atlas-index { min-height: 90px; padding: 9px; flex-direction: row; justify-content: flex-start; text-align:left; }
+  .world-atlas img.atlas-planet { width: 42px; height: 42px; }
+  .studio-teaser { min-height: 78svh; }
+  .studio-cover img { object-position: 50% 30%; }
+  .studio-teaser::after { background: linear-gradient(0deg,#080910 0%,#080910b5 35%,transparent 65%); }
+  .journey-caption { bottom: 20%; }
+}

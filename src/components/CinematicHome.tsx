@@ -133,12 +133,17 @@ export default function CinematicHome({ onAbout, active, introPlaying = false }:
       <CreatorEmblem onOpen={onAbout} />
       <button className="home-motto motto-light" onPointerEnter={event => { if (event.pointerType === 'mouse') setTheme('light'); }} onPointerLeave={event => { if (event.pointerType === 'mouse') setTheme(null); }} onFocus={event => { if (event.currentTarget.matches(':focus-visible')) setTheme('light'); }} onBlur={() => setTheme(null)} onClick={() => setTheme(value => value === 'light' ? null : 'light')} aria-pressed={theme === 'light'}><span>A Light</span>that Grows Through Its Darkness</button>
       <button className="home-motto motto-life" onPointerEnter={event => { if (event.pointerType === 'mouse') setTheme('life'); }} onPointerLeave={event => { if (event.pointerType === 'mouse') setTheme(null); }} onFocus={event => { if (event.currentTarget.matches(':focus-visible')) setTheme('life'); }} onBlur={() => setTheme(null)} onClick={() => setTheme(value => value === 'life' ? null : 'life')} aria-pressed={theme === 'life'}><span>A Life</span>That Shines Through Its Roots</button>
-      <div className="universe-title"><div className="living-wordmark"><h1>STARRTREE</h1><TitleBotany /><div className="title-constellation" aria-hidden="true">{Array.from({length:12},(_,i)=><i key={i} style={{left:`${3+i*8.4}%`,top:`${i%2 ? 82 : 12}%`,'--twinkle-delay':`${i*70}ms`} as CSSProperties}/>)}</div></div></div>
+      <div className="universe-title"><div className="living-wordmark"><h1>STARRTREE</h1><TitleBotany /><div className="title-constellation" aria-hidden="true">{Array.from({length:12},(_,i)=><i key={i} style={{left:`${3+i*8.4}%`,top:`${i%2 ? 82 : 12}%`,'--twinkle-delay':`${i*70}ms`} as CSSProperties}/>)}</div></div><p className="planet-invitation">Choose a planet to explore its world</p></div>
       <div className="universe-bottom"><a href="#/services">WORK WITH MAX <span>↗</span></a></div>
     </section>
-    <nav className="planet-legend" aria-label="Seven branches">{worlds.map(world=><button key={world.id} onClick={(event)=>choose(world,event.currentTarget)} aria-pressed={selected?.id===world.id} style={{'--world':world.color} as CSSProperties}><img src={planets[world.id].src} alt="" width="48" height="48" /><span><small>BRANCH {world.number}</small>{world.title}</span><b>↗</b></button>)}</nav>
-    <section id="selected-world" className="world-selection"><div><p className="cinema-eyebrow">FOLLOW YOUR CURIOSITY</p><h2>Choose a world. <em>See what grows.</em></h2></div><a href="#/items" className="st-secondary">Or find something directly ↗</a>
-    </section>
+    <nav className="planet-legend world-atlas" aria-label="Seven branches">
+      {worlds.map(world => <button key={world.id} onClick={event => choose(world, event.currentTarget)} aria-haspopup="dialog" style={{ '--world': world.color } as CSSProperties}>
+        <img className="atlas-planet" src={planets[world.id].src} alt="" loading="lazy" />
+        <img className="atlas-branch" src={`/branches/${world.id}.webp`} alt="" loading="lazy" />
+        <span>{world.title}</span>
+      </button>)}
+      <a className="atlas-index" href="#/items"><span aria-hidden="true" className="atlas-grid-icon" />All items</a>
+    </nav>
     {selected && createPortal(<div className={`branch-expansion branch-expansion-${selected.id} ${motion ? '' : 'motion-paused'}`} id="expanded-world" role="dialog" aria-modal="true" aria-labelledby="expanded-branch-title" style={{'--world':selected.color,'--launch-x':`${launch.x}px`,'--launch-y':`${launch.y}px`,'--launch-size':`${launch.size}px`} as CSSProperties}>
       <button className="branch-expansion-shade" tabIndex={-1} onClick={close} aria-label="Close expanded branch" />
       <div className="branch-expansion-scene" aria-hidden="true"><img className="branch-expansion-tree" src={`/branches/${selected.id}.webp`} alt="" /><div className="branch-expansion-planet"><StarrFruit key={selected.id} worldId={selected.id} color={selected.color} large controls={false} /></div></div>
@@ -148,8 +153,16 @@ export default function CinematicHome({ onAbout, active, introPlaying = false }:
     <ScrollJourney />
     <section ref={origin} id="after-journey" tabIndex={-1} className="origin-interlude"><picture><source media="(max-width:700px)" srcSet={cinema.originMobile}/><img src={cinema.originDesktop} alt="StarrX, rooted in a universe of possibility" loading="lazy" /></picture><div><p className="cinema-eyebrow">THE HUMAN AT THE CENTER</p><h2>Many branches.<br /><em>One imagination.</em></h2><button className="st-primary" onClick={onAbout}>Meet Max Starr ↗</button></div></section>
     <section className="studio-teaser">
-      <img className="studio-teaser-art" src={cinema.sanctuary} alt="StarrX in a luminous sanctuary of roots, water and starlight" loading="lazy" />
-      <div><p className="cinema-eyebrow">ART & MEDIA × MUSIC & SOUND</p><a href="#/world/art" aria-label="Enter StarrVerse Studios"><img className="studio-wordmark" src={cinema.studioLogo} alt="StarrVerse Studios" loading="lazy" /></a><p>One imagination.<br /><em>Every form of expression.</em></p><a className="st-primary" href="#/world/art">Enter the studio →</a><a className="st-secondary" href="#/world/music">Follow the sound ↗</a></div>
+      <picture className="studio-cover">
+        <source media="(max-width: 700px)" srcSet="/images/studio-portrait.webp" />
+        <img src="/images/studio-horizon.webp" alt="StarrX in a gold-traced hood" loading="lazy" />
+      </picture>
+      <div><img className="studio-wordmark" src={cinema.studioLogo} alt="StarrVerse Studios" loading="lazy" />
+        <nav className="studio-portals" aria-label="Explore the studio">
+          <a href="#/world/art"><img src="/images/chakra-bloom.webp" alt="" loading="lazy" /><span>Art &amp; media ↗</span></a>
+          <a href="#/world/music"><img src="/images/releases/sharks-starrs.jpg" alt="" loading="lazy" /><span>Music &amp; sound ↗</span></a>
+        </nav>
+      </div>
     </section>
   </>;
 }

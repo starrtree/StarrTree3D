@@ -74,16 +74,20 @@ export default function SeedEntrance({ onComplete, onReveal }: { onComplete: () 
   };
   return <>
     {createPortal(<div className={`intro-film-layer stage-${stage} ${revealed ? 'is-revealed' : ''}`} style={{ visibility: stage === 'seed' ? 'hidden' : undefined }}>
-      <video ref={growth} className={`entrance-film seed-growth-film ${stage === 'grow' ? 'is-current' : ''}`} src={mobile ? cinema.seedGrowMobile : cinema.seedGrowDesktop} muted playsInline preload="auto" onTimeUpdate={event => { const film = event.currentTarget; if (Number.isFinite(film.duration)) setWash(Math.min(1,Math.max(0,(film.currentTime - film.duration + .6) / .6))); }} onEnded={enterFlight} onError={() => { if (stage === 'grow') enterFlight(); }} />
-      <video ref={video} className={`entrance-film starrx-flight-film ${stage === 'flight' ? 'is-current' : ''}`} src={cinema.introVideo} poster={cinema.flightPoster} muted playsInline preload="auto" onPlaying={() => setPlaying(true)} onTimeUpdate={() => { if (video.current && video.current.currentTime >= cinema.homeRevealSeconds) reveal(); }} onEnded={finish} onError={() => { if (stage === 'flight') finish(); }} />
+      <video ref={growth} className={`entrance-film seed-growth-film ${stage === 'grow' ? 'is-current' : ''}`} src={stage === 'grow' ? (mobile ? cinema.seedGrowMobile : cinema.seedGrowDesktop) : undefined} muted playsInline preload="auto" onTimeUpdate={event => { const film = event.currentTarget; if (Number.isFinite(film.duration)) setWash(Math.min(1,Math.max(0,(film.currentTime - film.duration + .6) / .6))); }} onEnded={enterFlight} onError={() => { if (stage === 'grow') enterFlight(); }} />
+      <video ref={video} className={`entrance-film starrx-flight-film ${stage === 'flight' ? 'is-current' : ''}`} src={stage === 'flight' ? cinema.introVideo : undefined} poster={cinema.flightPoster} muted playsInline preload="auto" onPlaying={() => setPlaying(true)} onTimeUpdate={() => { if (video.current && video.current.currentTime >= cinema.homeRevealSeconds) reveal(); }} onEnded={finish} onError={() => { if (stage === 'flight') finish(); }} />
       {stage === 'grow' && <div className="seed-to-starrx-light" style={{ opacity: wash }} aria-hidden="true" />}
       {stage === 'flight' && <><div className={`film-white-fade ${playing ? 'has-played' : ''}`} aria-hidden="true" />{!revealed && <h1 className="intro-wordmark">STARRTREE</h1>}</>}
       {!revealed && stage !== 'seed' && <button className="mobile-skip-intro" onClick={finish}>Skip intro →</button>}
       {needsGesture && <div className="film-retry"><button onClick={play}>Continue film →</button><button onClick={finish}>Skip film</button></div>}
     </div>, document.getElementById('intro-film-host') || document.body)}
     <dialog ref={dialog} className="seed-entrance" aria-label="Collect the StarrSeed" onCancel={event => { event.preventDefault(); finish(); }}>
-      <video className="seed-draw-film" src={mobile ? cinema.seedDrawMobile : cinema.seedDrawDesktop} autoPlay={motion} muted playsInline preload="auto" onLoadedMetadata={event => { if (!motion) event.currentTarget.currentTime = Math.max(0,event.currentTarget.duration - .1); }} />
-      <button className="seed-collect seed-video-collect" onClick={begin} aria-label="Collect the StarrSeed and enter StarrTree"><span>Collect the StarrSeed ↗</span></button>
+      <video className="seed-draw-film" poster={cinema.seed} src={motion ? (mobile ? cinema.seedDrawMobile : cinema.seedDrawDesktop) : undefined} autoPlay={motion} muted playsInline preload="auto" onLoadedMetadata={event => { if (!motion) event.currentTarget.currentTime = Math.max(0,event.currentTarget.duration - .1); }} />
+      <button className="seed-collect seed-video-collect" onClick={begin} aria-label="Collect the StarrSeed and enter with sound"><span>Collect the StarrSeed <small>{motion ? 'Play the welcome film with sound' : 'Enter with sound'}</small></span></button>
+      <div className="seed-shortcuts">
+        <button onClick={finish}>Explore without sound</button>
+        <a href="#/services" onClick={finish}>Work with Max ↗</a>
+      </div>
     </dialog>
   </>;
 }

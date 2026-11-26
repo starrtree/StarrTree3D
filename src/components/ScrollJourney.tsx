@@ -1,59 +1,89 @@
 import { useEffect, useRef, useState } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { cinema } from '../data/cinema';
 import { useExperience } from './Experience';
-gsap.registerPlugin(ScrollTrigger);
 
-/** Native page scroll stays available; only the film is pinned. No wheel interception. */
 export default function ScrollJourney() {
   const root = useRef<HTMLElement>(null);
   const film = useRef<HTMLVideoElement>(null);
-  const [ready, setReady] = useState(false);
-  const [nearby, setNearby] = useState(false);
   const { motion } = useExperience();
+  const [nearby, setNearby] = useState(false);
+  const [failed, setFailed] = useState(false);
+  const [chapter, setChapter] = useState(0);
+  const scrolling = motion && !failed;
+
   useEffect(() => {
-    if (!root.current || !motion) return;
-    const observer = new IntersectionObserver(([entry]) => { if (entry.isIntersecting) setNearby(true); }, { rootMargin:'700px' });
-    observer.observe(root.current);
+    const section = root.current;
+    if (!section || !motion) return;
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        setNearby(true);
+        observer.disconnect();
+      }
+    }, { rootMargin: '800px' });
+    observer.observe(section);
     return () => observer.disconnect();
   }, [motion]);
+
   useEffect(() => {
+    const section = root.current;
     const video = film.current;
-    if (!video || !ready || !motion) return;
-    let target = 1, time = 1, velocity = 0, visible = false;
-    const end = Math.max(1, video.duration - 0.06);
-    video.currentTime = 1;
-    const context = gsap.context(() => {
-      const timeline = gsap.timeline({scrollTrigger:{trigger:root.current,start:'top top',end:'bottom bottom',scrub:0.6,
-        onToggle:self => { visible = self.isActive; },
-        onUpdate:self => { target = 1 + self.progress * (end - 1); visible = self.isActive; },
-      }});
-      timeline.fromTo('.journey-copy-0',{autoAlpha:1,y:0},{autoAlpha:0,y:-110,duration:.25},0)
-        .fromTo('.journey-copy-1',{autoAlpha:0,y:120},{autoAlpha:1,y:0,duration:.2},.25)
-        .to('.journey-copy-1',{autoAlpha:0,y:-100,duration:.2},.55)
-        .fromTo('.journey-copy-2',{autoAlpha:0,y:110},{autoAlpha:1,y:0,duration:.22},.76);
-    },root);
-    const tick = (_time:number, delta:number) => {
-      if (document.hidden || (!visible && Math.abs(target-time)<.02)) return;
-      const dt = Math.min(delta/1000,.035);
-      velocity = (velocity+(target-time)*90*dt)*Math.exp(-18*dt);
-      time = Math.max(1,Math.min(end,time+velocity*dt));
-      if (!video.seeking && Math.abs(video.currentTime-time)>.025) video.currentTime=time;
+    if (!section || !video || !scrolling) return;
+    let frame = 0;
+    let target = 0;
+    // Coalesce touch scrolls while the decoder is busy, then seek the latest target.
+    const seek = () => {
+      if (!Number.isFinite(video.duration) || video.seeking) return;
+      const time = target * Math.max(0, video.duration - 1 / 30);
+      if (Math.abs(video.currentTime - time) > 1 / 40) video.currentTime = time;
     };
-    gsap.ticker.add(tick);
-    return () => { gsap.ticker.remove(tick); context.revert(); };
-  },[ready,motion]);
-  return <section ref={root} className={`scroll-journey ${motion && ready ? 'is-ready' : 'is-still'}`} aria-label="From one spark to a universe">
+    const sync = () => {
+      frame = 0;
+      const box = section.getBoundingClientRect();
+      const sticky = section.firstElementChild as HTMLElement;
+      target = Math.min(1, Math.max(0, -box.top / Math.max(1, box.height - sticky.offsetHeight)));
+      section.style.setProperty('--film-progress', String(target));
+      setChapter(target < .32 ? 0 : target < .78 ? 1 : 2);
+      seek();
+    };
+    const update = () => { if (!frame) frame = requestAnimationFrame(sync); };
+    const resize = new ResizeObserver(update);
+    resize.observe(section);
+    window.addEventListener('scroll', update, { passive: true });
+    video.addEventListener('loadedmetadata', update);
+    video.addEventListener('loadeddata', update);
+    video.addEventListener('seeked', seek);
+    sync();
+    return () => {
+      cancelAnimationFrame(frame);
+      resize.disconnect();
+      window.removeEventListener('scroll', update);
+      video.removeEventListener('loadedmetadata', update);
+      video.removeEventListener('loadeddata', update);
+      video.removeEventListener('seeked', seek);
+    };
+  }, [nearby, scrolling]);
+
+  const labels = ['The spark', 'Expansion', 'The return'];
+  return <section ref={root} className={`scroll-journey ${scrolling ? 'is-ready' : 'is-still'}`} aria-label="From one spark to a universe">
     <div className="journey-sticky">
       <img className="journey-media" src={cinema.journeyPoster} alt="A luminous spark expands through StarrX into a cosmic universe" loading="lazy" />
-      {motion && nearby && <video ref={film} className="journey-media" src={cinema.journeyVideo} muted playsInline preload="auto" poster={cinema.journeyPoster} onLoadedMetadata={event => { event.currentTarget.currentTime = 1; }} onSeeked={() => setReady(true)} onError={() => setReady(false)} aria-hidden="true" />}
+      {scrolling && nearby && <video ref={film} className="journey-media" muted playsInline preload="auto" poster={cinema.journeyPoster} onError={event => { if (event.target === event.currentTarget) setFailed(true); }} aria-hidden="true">
+        <source media="(max-width: 700px)" src="/cinema/journey/portrait.mp4" type="video/mp4" />
+        <source media="(max-width: 700px)" src="/cinema/journey/portrait.webm" type="video/webm" />
+        <source src={cinema.journeyVideo} type="video/mp4" onError={() => setFailed(true)} />
+      </video>}
       <div className="journey-shade" />
-      <div className="journey-copy journey-copy-0"><p className="cinema-eyebrow">01 / THE SPARK</p><h2>It starts<br />within.</h2><p>One imagination. Seven ways to bring it to life.</p></div>
-      <div className="journey-copy journey-copy-1"><p className="cinema-eyebrow">02 / THE EXPANSION</p><h2>Let the idea<br />become a world.</h2><p>Sound, image, technology and a little curiosity.</p></div>
-      <div className="journey-copy journey-copy-2"><p className="cinema-eyebrow">03 / MAKE SOMETHING REAL</p><h2>Where will<br />you take it?</h2><a className="st-primary" href="#/world/art">Enter StarrVerse Studios ↗</a><a className="st-secondary" href="#/services">Build with Max ↗</a></div>
-      <span className="journey-cue">{motion && ready ? 'SCROLL TO EXPAND ↓' : 'A UNIVERSE OF POSSIBILITIES'}</span>
-      <a className="journey-skip" href="#after-journey" onClick={event=>{event.preventDefault();const next=document.getElementById('after-journey');next?.scrollIntoView({behavior:'instant'});next?.focus({preventScroll:true});}}>Skip this chapter ↓</a>
+      <div className="journey-caption">
+        <h2>{labels[scrolling ? chapter : 2]}</h2>
+        {scrolling && <><span className="journey-progress" aria-hidden="true"><i /></span><small>Scroll to move through the film</small></>}
+        {(!scrolling || chapter === 2) && <nav aria-label="Continue from the film"><a href="#/world/art">Explore art ↗</a><a href="#/services">Build with Max ↗</a></nav>}
+      </div>
+      <a className="journey-skip" href="#after-journey" onClick={event => {
+        event.preventDefault();
+        const next = document.getElementById('after-journey');
+        next?.scrollIntoView({ behavior: 'instant' });
+        next?.focus({ preventScroll: true });
+      }}>Skip film ↓</a>
     </div>
   </section>;
 }
