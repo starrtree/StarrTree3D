@@ -233,7 +233,7 @@ export const items: Item[] = [
     status: "Setup + subscription · test",
     serviceId: "prod_VJ1PqpP9AwI9hI",
     description:
-      "$950 setup plus a separate $199 per month recurring subscription. One active receptionist implementation at a time until the delivery system is mature.",
+      "$950 setup plus a separate $199 per month recurring subscription. Max sets up one receptionist at a time. Ask about the next opening.",
   },
   {
     id: "custom-gpt",
@@ -257,7 +257,7 @@ export const items: Item[] = [
   },
   {
     id: "studio-session", worldId: "music", title: "Portable Home Studio Kit", kind: "Service", status: "Packages · enquire",
-    description: "Record and mix vocals on your phone wherever you go. Personal studio-kit packages, setup teaching and portable sessions where Max meets you. Package pricing, equipment, travel and availability are confirmed before booking. The legacy fixed-studio checkout does not purchase this new package.",
+    description: "Record and mix vocals on your phone wherever you go. Personal studio-kit packages, setup teaching and portable sessions where Max meets you. Package pricing, equipment, travel and availability are confirmed before booking. Email Max for a package quote.",
   },
   {
     id: "mix-master",
